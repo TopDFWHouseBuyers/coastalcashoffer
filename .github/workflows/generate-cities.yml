@@ -1,0 +1,29 @@
+name: Generate City Pages
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-cities:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install anthropic
+      - name: Generate city pages
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/generate_cities.py
+      - run: python scripts/generate_sitemap.py
+      - run: |
+          git config --global user.name "Coastal Cash Offer Bot"
+          git config --global user.email "bot@coastalcashoffer.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "Auto: Generated city landing pages"
+          git push
