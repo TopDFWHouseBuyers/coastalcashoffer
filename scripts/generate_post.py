@@ -277,6 +277,14 @@ body{{background:#fdfaf5;color:#2a2018;font-family:'Nunito',sans-serif;font-weig
 footer{{background:#0f4a63;color:rgba(255,255,255,0.5);text-align:center;padding:28px;font-size:12px;border-top:3px solid #e8823a}}
 footer a{{color:#f8d264;text-decoration:none}}
 </style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QW7L1QHYFR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+  gtag('config', 'G-QW7L1QHYFR');
+</script>
 </head>
 <body>
 
