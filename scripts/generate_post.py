@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Coastal Cash Offer - Automated Blog Generator
+Golden Coast Cash Offer - Automated Blog Generator
 Southern California market - OC, San Diego, LA
 Runs Mon/Wed/Fri/Sat at 8am CT
 """
@@ -128,12 +128,12 @@ def get_next_topic():
 def generate_post(topic: dict) -> dict:
     client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
-    prompt = f"""You are an expert real estate SEO content writer for Coastal Cash Offer, a cash home buying company in Southern California.
+    prompt = f"""You are an expert real estate SEO content writer for Golden Coast Cash Offer, a cash home buying company serving Southern California.
 
 COMPANY INFO:
-- Name: Coastal Cash Offer
+- Name: Golden Coast Cash Offer
 - Phone: 949-280-5139
-- Website: https://www.coastalcashoffer.com
+- Website: https://www.goldencoastcashoffer.com
 - Service area: Orange County (Irvine, Mission Viejo, Newport Beach, Laguna Hills, Lake Forest, San Clemente, San Juan Capistrano, Aliso Viejo, Huntington Beach, Tustin, Fountain Valley, Costa Mesa, Garden Grove, Fullerton, Anaheim, Santa Ana, Orange, Yorba Linda, Dana Point, Laguna Beach, Brea), San Diego, Los Angeles and all of Southern California
 
 ASSIGNMENT:
@@ -202,7 +202,7 @@ def build_html_page(post: dict, topic: dict) -> str:
 <meta name="description" content="{post['meta_description']}">
 <meta property="og:title" content="{post['meta_title']}">
 <meta property="og:description" content="{post['meta_description']}">
-<link rel="canonical" href="https://www.coastalcashoffer.com/blog/{topic['slug']}/">
+<link rel="canonical" href="https://www.goldencoastcashoffer.com/blog/{topic['slug']}/">
 <script type="application/ld+json">
 {{
   "@context": "https://schema.org",
@@ -211,9 +211,9 @@ def build_html_page(post: dict, topic: dict) -> str:
   "datePublished": "{datetime.now().isoformat()}",
   "publisher": {{
     "@type": "Organization",
-    "name": "Coastal Cash Offer",
+    "name": "Golden Coast Cash Offer",
     "telephone": "949-280-5139",
-    "url": "https://www.coastalcashoffer.com"
+    "url": "https://www.goldencoastcashoffer.com"
   }}
 }}
 </script>
@@ -222,7 +222,7 @@ def build_html_page(post: dict, topic: dict) -> str:
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    {{"@type": "Question","name": "How fast can Coastal Cash Offer close on my home?","acceptedAnswer": {{"@type": "Answer","text": "We can close in as few as 7 days anywhere in Southern California. Call us at 949-280-5139."}}}},
+    {{"@type": "Question","name": "How fast can Golden Coast Cash Offer close on my home?","acceptedAnswer": {{"@type": "Answer","text": "We can close in as few as 7 days anywhere in Southern California. Call us at 949-280-5139."}}}},
     {{"@type": "Question","name": "Do I need to make repairs before selling?","acceptedAnswer": {{"@type": "Answer","text": "Never. We buy houses in any condition - no repairs, no cleaning, no staging required."}}}},
     {{"@type": "Question","name": "Are there any fees or commissions?","acceptedAnswer": {{"@type": "Answer","text": "Zero fees, zero commissions, zero closing costs. What we offer is exactly what you receive."}}}},
     {{"@type": "Question","name": "Do you buy homes with tenants in California?","acceptedAnswer": {{"@type": "Answer","text": "Yes. We buy California properties with tenants in place. You don't need to navigate California's complex tenant protection laws - we handle that after closing."}}}}
@@ -270,7 +270,7 @@ footer a{{color:#f8d264;text-decoration:none}}
 <body>
 
 <nav class="site-nav">
-  <a href="/" class="nav-logo">Coastal Cash Offer</a>
+  <a href="/" class="nav-logo">Golden Coast Cash Offer</a>
   <div class="nav-links">
     <a href="/">Home</a>
     <a href="/blog/">Blog</a>
@@ -281,7 +281,7 @@ footer a{{color:#f8d264;text-decoration:none}}
 
 <div class="hero-blog">
   <div class="hero-blog-inner">
-    <div class="hero-cat">Coastal Cash Offer · SoCal Resource Guide</div>
+    <div class="hero-cat">Golden Coast Cash Offer · SoCal Resource Guide</div>
     <h1>{post['h1']}</h1>
     <div class="hero-meta">Published {date_str} · Southern California</div>
   </div>
@@ -320,7 +320,7 @@ footer a{{color:#f8d264;text-decoration:none}}
 </div>
 
 <footer>
-  {year} Coastal Cash Offer · <a href="/">coastalcashoffer.com</a> · 949-280-5139<br>
+  {year} Golden Coast Cash Offer · <a href="/">goldencoastcashoffer.com</a> · 949-280-5139<br>
   Serving Orange County, San Diego, Los Angeles and all of Southern California
 </footer>
 
@@ -344,7 +344,7 @@ def main():
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"Saved: {output_file}")
-    print(f"URL: https://www.coastalcashoffer.com/blog/{topic['slug']}/")
+    print(f"URL: https://www.goldencoastcashoffer.com/blog/{topic['slug']}/")
     print("Done!")
 
 
