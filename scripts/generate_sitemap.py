@@ -33,9 +33,8 @@ def generate_sitemap():
   </url>""")
     for slug in CITY_SLUGS:
         city_file = Path(f"{slug}/index.html")
-        if city_file.exists():
-            mod_date = datetime.fromtimestamp(city_file.stat().st_mtime).strftime("%Y-%m-%d")
-            urls.append(f"""  <url>
+        mod_date = datetime.fromtimestamp(city_file.stat().st_mtime).strftime("%Y-%m-%d") if city_file.exists() else today
+        urls.append(f"""  <url>
     <loc>{BASE_URL}/{slug}/</loc>
     <lastmod>{mod_date}</lastmod>
     <changefreq>monthly</changefreq>
