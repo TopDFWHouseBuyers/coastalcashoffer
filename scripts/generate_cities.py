@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Coastal Cash Offer - City Landing Pages Generator
+Golden Coast Cash Offer - City Landing Pages Generator
 Generates 40+ city-specific SEO pages for Southern California
 Run once: python scripts/generate_cities.py
 """
@@ -66,12 +66,12 @@ CITIES = [
 def generate_city_content(city: dict) -> dict:
     client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
-    prompt = f"""You are an expert real estate SEO content writer for Coastal Cash Offer, a cash home buying company in Southern California.
+    prompt = f"""You are an expert real estate SEO content writer for Golden Coast Cash Offer, a cash home buying company serving Southern California.
 
 COMPANY INFO:
-- Name: Coastal Cash Offer
+- Name: Golden Coast Cash Offer
 - Phone: 949-280-5139
-- Website: https://www.coastalcashoffer.com
+- Website: https://www.goldencoastcashoffer.com
 
 ASSIGNMENT: Write city-specific landing page content for {city['name']}, {city['county']} County, CA.
 
@@ -134,7 +134,7 @@ def build_city_page(content: dict, city: dict) -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{content['meta_title']}</title>
 <meta name="description" content="{content['meta_description']}">
-<link rel="canonical" href="https://www.coastalcashoffer.com/{slug}/">
+<link rel="canonical" href="https://www.goldencoastcashoffer.com/{slug}/">
 <script type="application/ld+json">
 {{
   "@context": "https://schema.org",
@@ -142,7 +142,7 @@ def build_city_page(content: dict, city: dict) -> str:
   "mainEntity": [
     {{"@type": "Question","name": "How fast can you buy my house in {city['name']}, CA?","acceptedAnswer": {{"@type": "Answer","text": "We can close in as few as 7 days in {city['name']}. Call us at 949-280-5139 to discuss your timeline."}}}},
     {{"@type": "Question","name": "Do I need to make repairs before selling my {city['name']} home?","acceptedAnswer": {{"@type": "Answer","text": "Never. We buy houses in {city['name']} in any condition - no repairs, no cleaning required."}}}},
-    {{"@type": "Question","name": "Are there any fees when selling to Coastal Cash Offer?","acceptedAnswer": {{"@type": "Answer","text": "Zero fees, zero commissions, zero closing costs. What we offer is exactly what you receive."}}}},
+    {{"@type": "Question","name": "Are there any fees when selling to Golden Coast Cash Offer?","acceptedAnswer": {{"@type": "Answer","text": "Zero fees, zero commissions, zero closing costs. What we offer is exactly what you receive."}}}},
     {{"@type": "Question","name": "Do you buy homes with tenants in {city['name']}?","acceptedAnswer": {{"@type": "Answer","text": "Yes. We buy California properties with tenants in place - you don't need to deal with California tenant laws."}}}}
   ]
 }}
@@ -218,7 +218,7 @@ footer a{{color:var(--gold);text-decoration:none}}
 <body>
 
 <nav class="site-nav">
-  <a href="/" class="nav-logo">Coastal Cash Offer</a>
+  <a href="/" class="nav-logo">Golden Coast Cash Offer</a>
   <div class="nav-links">
     <a href="/">Home</a>
     <a href="/blog/">Blog</a>
@@ -335,7 +335,7 @@ footer a{{color:var(--gold);text-decoration:none}}
 </div>
 
 <footer>
-  {year} Coastal Cash Offer · <a href="/">coastalcashoffer.com</a> · 949-280-5139<br>
+  {year} Golden Coast Cash Offer · <a href="/">goldencoastcashoffer.com</a> · 949-280-5139<br>
   Serving {city['name']} and all of Orange County, San Diego, and Los Angeles
 </footer>
 
