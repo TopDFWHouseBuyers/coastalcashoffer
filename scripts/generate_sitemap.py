@@ -2,7 +2,7 @@
 from pathlib import Path
 from datetime import datetime
 
-BASE_URL = "https://www.coastalcashoffer.com"
+BASE_URL = "https://www.goldencoastcashoffer.com"
 
 CITY_SLUGS = [
     "irvine","anaheim","santa-ana","huntington-beach","newport-beach",
