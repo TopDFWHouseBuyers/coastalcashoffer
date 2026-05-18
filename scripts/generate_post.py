@@ -45,20 +45,16 @@ CITY_TOPICS = [
 ]
 
 EVERGREEN_TOPICS = [
-    # DIVORCE
     {"title": "Selling a House During Divorce in California - Complete Guide", "slug": "selling-house-during-divorce-california", "keyword": "selling house during divorce California", "category": "divorce"},
     {"title": "California Community Property Laws and Selling Your Home", "slug": "california-community-property-selling-home", "keyword": "California community property selling home", "category": "divorce"},
     {"title": "How to Sell Your Orange County Home Fast During Divorce", "slug": "sell-home-fast-divorce-orange-county", "keyword": "sell home fast divorce Orange County", "category": "divorce"},
-    # FORECLOSURE
     {"title": "How to Stop Foreclosure in California - Your Options", "slug": "stop-foreclosure-california", "keyword": "stop foreclosure California", "category": "foreclosure"},
     {"title": "Pre-Foreclosure in Southern California - What It Means", "slug": "pre-foreclosure-southern-california", "keyword": "pre-foreclosure Southern California", "category": "foreclosure"},
     {"title": "Selling Your SoCal Home Before Foreclosure", "slug": "sell-home-before-foreclosure-california", "keyword": "sell home before foreclosure California", "category": "foreclosure"},
     {"title": "Behind on Mortgage Payments in California? Your Options", "slug": "behind-on-mortgage-payments-california", "keyword": "behind on mortgage payments California", "category": "foreclosure"},
-    # INHERITANCE
     {"title": "Selling an Inherited House in California - Complete Guide", "slug": "selling-inherited-house-california", "keyword": "selling inherited house California", "category": "inheritance"},
     {"title": "California Probate Process for Selling a House", "slug": "california-probate-process-selling-house", "keyword": "California probate selling house", "category": "inheritance"},
     {"title": "Selling an Inherited Property in Orange County", "slug": "selling-inherited-property-orange-county", "keyword": "selling inherited property Orange County", "category": "inheritance"},
-    # EDUCATION
     {"title": "What Is a Cash Home Buyer? How It Works in California", "slug": "what-is-cash-home-buyer-california", "keyword": "what is a cash home buyer California", "category": "education"},
     {"title": "Cash Offer vs Traditional Sale in California - Which Is Better?", "slug": "cash-offer-vs-traditional-sale-california", "keyword": "cash offer vs traditional sale California", "category": "education"},
     {"title": "The Real Cost of Selling a House in California", "slug": "real-cost-selling-house-california", "keyword": "cost of selling a house California", "category": "education"},
@@ -67,7 +63,6 @@ EVERGREEN_TOPICS = [
     {"title": "California Capital Gains Tax When Selling Your Home", "slug": "california-capital-gains-tax-selling-home", "keyword": "California capital gains tax selling home", "category": "education"},
     {"title": "Is It Better to Sell to a Cash Buyer or Agent in California?", "slug": "cash-buyer-vs-agent-california", "keyword": "cash buyer vs agent California", "category": "education"},
     {"title": "How to Get a Fair Cash Offer on Your California Home", "slug": "fair-cash-offer-california-home", "keyword": "fair cash offer California home", "category": "education"},
-    # SITUATIONS
     {"title": "Selling a House With Tenants in California - Landlord Guide", "slug": "selling-house-with-tenants-california", "keyword": "selling house with tenants California", "category": "situations"},
     {"title": "California Tenant Protection Laws - What Landlords Need to Know", "slug": "california-tenant-protection-laws-landlords", "keyword": "California tenant protection laws landlords selling", "category": "situations"},
     {"title": "Selling a Fire-Damaged Home in Southern California", "slug": "sell-fire-damaged-home-southern-california", "keyword": "sell fire damaged home Southern California", "category": "situations"},
@@ -79,7 +74,6 @@ EVERGREEN_TOPICS = [
     {"title": "Downsizing in Orange County - How to Sell Fast", "slug": "downsizing-orange-county-sell-fast", "keyword": "downsizing Orange County sell home", "category": "situations"},
     {"title": "Selling a Rental Property in California - Cash vs 1031", "slug": "selling-rental-property-california", "keyword": "selling rental property California", "category": "situations"},
     {"title": "How to Sell Your California Home When Relocating", "slug": "sell-home-relocating-california", "keyword": "sell home relocating California", "category": "situations"},
-    # OC MARKET
     {"title": "Orange County Real Estate Market 2025 - What Sellers Need to Know", "slug": "orange-county-real-estate-market-2025", "keyword": "Orange County real estate market 2025", "category": "market"},
     {"title": "Is Now a Good Time to Sell Your OC Home?", "slug": "good-time-sell-orange-county-home", "keyword": "good time sell Orange County home", "category": "market"},
     {"title": "San Diego Real Estate Market 2025 - Seller Guide", "slug": "san-diego-real-estate-market-2025", "keyword": "San Diego real estate market 2025", "category": "market"},
@@ -165,7 +159,7 @@ Return ONLY valid JSON (no markdown, no backticks):
 }}"""
 
     prompt_safe = prompt.encode('ascii', errors='replace').decode('ascii')
-    # Retry up to 3 times on overload
+
     for attempt in range(3):
         try:
             message = client.messages.create(
@@ -180,10 +174,10 @@ Return ONLY valid JSON (no markdown, no backticks):
                 time.sleep(30)
             else:
                 raise
+
     raw = message.content[0].text.strip()
-    raw = re.sub(r'^```json\s*', '', raw)
-    raw = re.sub(r'\s*```$', '', raw)
-def clean_json(text):
+
+    def clean_json(text):
         text = re.sub(r'^```json\s*', '', text)
         text = re.sub(r'\s*```$', '', text)
         text = text.strip()
@@ -247,6 +241,22 @@ def build_html_page(post: dict, topic: dict) -> str:
   ]
 }}
 </script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QW7L1QHYFR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+  gtag('config', 'G-QW7L1QHYFR');
+</script>
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){{
+        c[a]=c[a]||function(){{(c[a].q=c[a].q||[]).push(arguments)}};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    }})(window, document, "clarity", "script", "wmyw873b7e");
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{{box-sizing:border-box;margin:0;padding:0}}
@@ -284,22 +294,6 @@ body{{background:#fdfaf5;color:#2a2018;font-family:'Nunito',sans-serif;font-weig
 footer{{background:#0f4a63;color:rgba(255,255,255,0.5);text-align:center;padding:28px;font-size:12px;border-top:3px solid #e8823a}}
 footer a{{color:#f8d264;text-decoration:none}}
 </style>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-QW7L1QHYFR"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){{dataLayer.push(arguments);}}
-  gtag('js', new Date());
-  gtag('config', 'G-QW7L1QHYFR');
-</script>
-<!-- Microsoft Clarity -->
-<script type="text/javascript">
-    (function(c,l,a,r,i,t,y){{
-        c[a]=c[a]||function(){{(c[a].q=c[a].q||[]).push(arguments)}};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    }})(window, document, "clarity", "script", "wmyw873b7e");
-</script>
 </head>
 <body>
 
