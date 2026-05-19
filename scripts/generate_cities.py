@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Golden Coast Cash Offer - City Landing Pages Generator
-Generates 40+ city-specific SEO pages for Southern California
-Run once: python scripts/generate_cities.py
+Golden Coast Cash Offer — City Landing Page Generator (UPDATED)
+Full city list grouped by region in the bottom strip.
+Run: python scripts/generate_cities.py
 """
 
 import os
@@ -13,54 +13,114 @@ from datetime import datetime
 from pathlib import Path
 
 CITIES = [
-    # Orange County - Primary focus
-    {"name": "Irvine", "county": "Orange", "zip": "92618", "region": "Orange County", "notes": "one of the most affluent planned communities in the US with high home values"},
-    {"name": "Anaheim", "county": "Orange", "zip": "92801", "region": "Orange County", "notes": "home of Disneyland, diverse city with a mix of older homes and newer developments"},
-    {"name": "Santa Ana", "county": "Orange", "zip": "92701", "region": "Orange County", "notes": "Orange County seat, large Hispanic community, many older homes needing updates"},
-    {"name": "Huntington Beach", "county": "Orange", "zip": "92648", "region": "Orange County", "notes": "Surf City USA, beachfront properties, strong demand for coastal homes"},
-    {"name": "Newport Beach", "county": "Orange", "zip": "92660", "region": "Orange County", "notes": "ultra-premium coastal city, among California's most expensive real estate markets"},
-    {"name": "Mission Viejo", "county": "Orange", "zip": "92691", "region": "Orange County", "notes": "master-planned community, predominantly single-family homes, strong HOA culture"},
-    {"name": "Laguna Hills", "county": "Orange", "zip": "92653", "region": "Orange County", "notes": "quiet suburban community in south OC with many 1980s-era homes"},
-    {"name": "Laguna Niguel", "county": "Orange", "zip": "92677", "region": "Orange County", "notes": "upscale coastal community near Laguna Beach with premium home values"},
-    {"name": "Lake Forest", "county": "Orange", "zip": "92630", "region": "Orange County", "notes": "inland OC community with many 1970s-80s homes and strong family neighborhoods"},
-    {"name": "San Clemente", "county": "Orange", "zip": "92672", "region": "Orange County", "notes": "Spanish Village by the Sea, coastal community near Camp Pendleton"},
-    {"name": "San Juan Capistrano", "county": "Orange", "zip": "92675", "region": "Orange County", "notes": "historic mission city, equestrian community, older Spanish-style homes"},
-    {"name": "Aliso Viejo", "county": "Orange", "zip": "92656", "region": "Orange County", "notes": "newer planned community, one of the newest cities in OC, modern developments"},
-    {"name": "Costa Mesa", "county": "Orange", "zip": "92626", "region": "Orange County", "notes": "arts and shopping hub near Newport Beach, mix of older homes and new condos"},
-    {"name": "Tustin", "county": "Orange", "zip": "92780", "region": "Orange County", "notes": "mix of historic old town and newer Tustin Ranch developments, great location"},
-    {"name": "Fountain Valley", "county": "Orange", "zip": "92708", "region": "Orange County", "notes": "centrally located OC city, many 1960s-70s ranch homes, Korean community"},
-    {"name": "Garden Grove", "county": "Orange", "zip": "92840", "region": "Orange County", "notes": "diverse OC city, large Vietnamese community, many older affordable homes"},
-    {"name": "Fullerton", "county": "Orange", "zip": "92832", "region": "Orange County", "notes": "college town with Cal State Fullerton, historic downtown, diverse housing stock"},
-    {"name": "Orange", "county": "Orange", "zip": "92868", "region": "Orange County", "notes": "historic Old Towne Orange, antique district, mix of Victorian and modern homes"},
-    {"name": "Yorba Linda", "county": "Orange", "zip": "92886", "region": "Orange County", "notes": "birthplace of Nixon, affluent east OC community, larger lots and equestrian areas"},
-    {"name": "Dana Point", "county": "Orange", "zip": "92629", "region": "Orange County", "notes": "harbor city, whale watching capital, coastal premium properties"},
-    {"name": "Laguna Beach", "county": "Orange", "zip": "92651", "region": "Orange County", "notes": "premier arts colony, dramatic coastal bluffs, among most expensive in SoCal"},
-    {"name": "Brea", "county": "Orange", "zip": "92821", "region": "Orange County", "notes": "north OC city, award-winning downtown, newer planned neighborhoods"},
-    {"name": "Placentia", "county": "Orange", "zip": "92870", "region": "Orange County", "notes": "north OC suburban community, older affordable housing, family-oriented"},
-    {"name": "Buena Park", "county": "Orange", "zip": "90620", "region": "Orange County", "notes": "home of Knott's Berry Farm, diverse older community, many mid-century homes"},
-    {"name": "Westminster", "county": "Orange", "zip": "92683", "region": "Orange County", "notes": "Little Saigon, large Vietnamese community, affordable older housing"},
-    {"name": "Seal Beach", "county": "Orange", "zip": "90740", "region": "Orange County", "notes": "small beach town, Leisure World senior community, charming coastal village"},
-    # San Diego
-    {"name": "San Diego", "county": "San Diego", "zip": "92101", "region": "San Diego County", "notes": "California's second-largest city, strong military presence, diverse neighborhoods"},
-    {"name": "Chula Vista", "county": "San Diego", "zip": "91910", "region": "San Diego County", "notes": "second-largest SD city, diverse community, mix of older south bay and newer eastern developments"},
-    {"name": "Oceanside", "county": "San Diego", "zip": "92054", "region": "San Diego County", "notes": "military city near Camp Pendleton, beach access, diverse housing"},
-    {"name": "Escondido", "county": "San Diego", "zip": "92025", "region": "San Diego County", "notes": "inland north SD county, wine country, older affordable housing"},
-    {"name": "El Cajon", "county": "San Diego", "zip": "92020", "region": "San Diego County", "notes": "east SD county, large Middle Eastern community, affordable older homes"},
-    {"name": "Vista", "county": "San Diego", "zip": "92083", "region": "San Diego County", "notes": "north SD county, avocado farming history, affordable suburban community"},
-    {"name": "Carlsbad", "county": "San Diego", "zip": "92008", "region": "San Diego County", "notes": "upscale coastal north county, LEGOLAND, premium beachside properties"},
-    {"name": "San Marcos", "county": "San Diego", "zip": "92069", "region": "San Diego County", "notes": "inland north county, Cal State San Marcos, growing community"},
-    {"name": "Santee", "county": "San Diego", "zip": "92071", "region": "San Diego County", "notes": "east county suburban community, affordable family neighborhoods"},
-    {"name": "La Mesa", "county": "San Diego", "zip": "91941", "region": "San Diego County", "notes": "Jewel of the Hills, charming village, close to downtown SD"},
-    {"name": "Poway", "county": "San Diego", "zip": "92064", "region": "San Diego County", "notes": "City in the Country, large lots, excellent schools, affluent suburban"},
-    # Los Angeles
-    {"name": "Long Beach", "county": "Los Angeles", "zip": "90802", "region": "Los Angeles County", "notes": "second-largest LA city, major port, diverse neighborhoods from historic to beachfront"},
-    {"name": "Torrance", "county": "Los Angeles", "zip": "90501", "region": "Los Angeles County", "notes": "South Bay community, large Japanese-American community, strong auto industry presence"},
-    {"name": "Pasadena", "county": "Los Angeles", "zip": "91101", "region": "Los Angeles County", "notes": "Rose Bowl city, Caltech, beautiful craftsman homes, affluent historic community"},
-    {"name": "Burbank", "county": "Los Angeles", "zip": "91502", "region": "Los Angeles County", "notes": "Media capital, Disney and Warner Bros, strong entertainment industry"},
-    {"name": "Glendale", "county": "Los Angeles", "zip": "91201", "region": "Los Angeles County", "notes": "large Armenian-American community, diverse city north of LA, hillside properties"},
-    {"name": "Whittier", "county": "Los Angeles", "zip": "90601", "region": "Los Angeles County", "notes": "birthplace of Nixon, historic Uptown, affordable southeast LA county"},
-    {"name": "Downey", "county": "Los Angeles", "zip": "90241", "region": "Los Angeles County", "notes": "southeast LA county, NASA history, diverse working-class community"},
+    # ── Ventura County ─────────────────────────────────────────────────────
+    {"name": "Ventura",           "county": "Ventura",     "zip": "93001", "region": "Ventura County",   "notes": "coastal city on the Pacific, historic downtown, gateway to Channel Islands"},
+    {"name": "Oxnard",            "county": "Ventura",     "zip": "93030", "region": "Ventura County",   "notes": "largest city in Ventura County, beachfront community, large Latino population"},
+    {"name": "Port Hueneme",      "county": "Ventura",     "zip": "93041", "region": "Ventura County",   "notes": "small beach city, naval base, affordable coastal housing"},
+    {"name": "Camarillo",         "county": "Ventura",     "zip": "93010", "region": "Ventura County",   "notes": "affluent inland Ventura city, premium outlets, upscale planned communities"},
+    {"name": "Thousand Oaks",     "county": "Ventura",     "zip": "91360", "region": "Ventura County",   "notes": "one of safest US cities, large lots, highly rated schools, tech corridor"},
+    {"name": "Simi Valley",       "county": "Ventura",     "zip": "93065", "region": "Ventura County",   "notes": "suburban community, Reagan Presidential Library, affordable family neighborhoods"},
+    {"name": "Ojai",              "county": "Ventura",     "zip": "93023", "region": "Ventura County",   "notes": "artsy mountain valley retreat, wellness tourism, unique hillside properties"},
+
+    # ── Los Angeles County ─────────────────────────────────────────────────
+    {"name": "Malibu",            "county": "Los Angeles", "zip": "90265", "region": "Los Angeles County","notes": "ultra-premium beachfront estates, celebrity enclave, dramatic coastal bluffs"},
+    {"name": "Santa Monica",      "county": "Los Angeles", "zip": "90401", "region": "Los Angeles County","notes": "iconic pier city, high-end coastal real estate, tech and entertainment hub"},
+    {"name": "Los Angeles",       "county": "Los Angeles", "zip": "90001", "region": "Los Angeles County","notes": "second-largest US city, incredibly diverse neighborhoods, strong investor demand"},
+    {"name": "Beverly Hills",     "county": "Los Angeles", "zip": "90210", "region": "Los Angeles County","notes": "world-famous luxury enclave, ultra-premium estates, global buyer demand"},
+    {"name": "West Hollywood",    "county": "Los Angeles", "zip": "90046", "region": "Los Angeles County","notes": "vibrant nightlife and arts district, high condo density, strong rental market"},
+    {"name": "Culver City",       "county": "Los Angeles", "zip": "90232", "region": "Los Angeles County","notes": "tech and entertainment hub, Amazon Studios, rapidly appreciating home values"},
+    {"name": "Inglewood",         "county": "Los Angeles", "zip": "90301", "region": "Los Angeles County","notes": "SoFi Stadium city, rapidly gentrifying, strong investor demand"},
+    {"name": "El Segundo",        "county": "Los Angeles", "zip": "90245", "region": "Los Angeles County","notes": "aerospace hub near LAX, tight-knit beach community, strong tech employment"},
+    {"name": "Manhattan Beach",   "county": "Los Angeles", "zip": "90266", "region": "Los Angeles County","notes": "premier South Bay beach city, top schools, among priciest SoCal coastal markets"},
+    {"name": "Hermosa Beach",     "county": "Los Angeles", "zip": "90254", "region": "Los Angeles County","notes": "vibrant beach community, walkable Pier Ave, strong vacation rental demand"},
+    {"name": "Redondo Beach",     "county": "Los Angeles", "zip": "90277", "region": "Los Angeles County","notes": "South Bay beach city, harbor area, mix of condos and single-family homes"},
+    {"name": "Torrance",          "county": "Los Angeles", "zip": "90501", "region": "Los Angeles County","notes": "South Bay community, large Japanese-American community, strong auto industry presence"},
+    {"name": "Long Beach",        "county": "Los Angeles", "zip": "90802", "region": "Los Angeles County","notes": "second-largest LA city, major port, diverse neighborhoods from historic to beachfront"},
+    {"name": "Pasadena",          "county": "Los Angeles", "zip": "91101", "region": "Los Angeles County","notes": "Rose Bowl city, Caltech, beautiful craftsman homes, affluent historic community"},
+    {"name": "Glendale",          "county": "Los Angeles", "zip": "91201", "region": "Los Angeles County","notes": "large Armenian-American community, diverse city north of LA, hillside properties"},
+    {"name": "Burbank",           "county": "Los Angeles", "zip": "91502", "region": "Los Angeles County","notes": "media capital, Disney and Warner Bros, strong entertainment industry presence"},
+    {"name": "Santa Clarita",     "county": "Los Angeles", "zip": "91350", "region": "Los Angeles County","notes": "master-planned communities, family-oriented, one of safest large CA cities"},
+    {"name": "Pomona",            "county": "Los Angeles", "zip": "91766", "region": "Los Angeles County","notes": "inland LA county, Cal Poly Pomona, diverse working-class community"},
+    {"name": "Whittier",          "county": "Los Angeles", "zip": "90601", "region": "Los Angeles County","notes": "historic Uptown, birthplace of Nixon, affordable southeast LA county"},
+    {"name": "Downey",            "county": "Los Angeles", "zip": "90241", "region": "Los Angeles County","notes": "southeast LA county, NASA history, diverse working-class community"},
+    {"name": "Lakewood",          "county": "Los Angeles", "zip": "90712", "region": "Los Angeles County","notes": "one of first planned communities in US, post-WWII suburb, strong civic identity"},
+    {"name": "Norwalk",           "county": "Los Angeles", "zip": "90650", "region": "Los Angeles County","notes": "southeast LA county, Cerritos border, large Hispanic community, older homes"},
+
+    # ── Orange County ──────────────────────────────────────────────────────
+    {"name": "Seal Beach",        "county": "Orange",      "zip": "90740", "region": "Orange County",    "notes": "small beach town, Leisure World senior community, charming coastal village"},
+    {"name": "Huntington Beach",  "county": "Orange",      "zip": "92648", "region": "Orange County",    "notes": "Surf City USA, beachfront properties, strong demand for coastal homes"},
+    {"name": "Newport Beach",     "county": "Orange",      "zip": "92660", "region": "Orange County",    "notes": "ultra-premium coastal city, among California's most expensive real estate markets"},
+    {"name": "Costa Mesa",        "county": "Orange",      "zip": "92626", "region": "Orange County",    "notes": "arts and shopping hub near Newport Beach, mix of older homes and new condos"},
+    {"name": "Laguna Beach",      "county": "Orange",      "zip": "92651", "region": "Orange County",    "notes": "premier arts colony, dramatic coastal bluffs, among most expensive in SoCal"},
+    {"name": "Dana Point",        "county": "Orange",      "zip": "92629", "region": "Orange County",    "notes": "harbor city, whale watching capital, coastal premium properties"},
+    {"name": "San Clemente",      "county": "Orange",      "zip": "92672", "region": "Orange County",    "notes": "Spanish Village by the Sea, coastal community near Camp Pendleton"},
+    {"name": "Irvine",            "county": "Orange",      "zip": "92618", "region": "Orange County",    "notes": "one of the most affluent planned communities in the US with high home values"},
+    {"name": "Santa Ana",         "county": "Orange",      "zip": "92701", "region": "Orange County",    "notes": "Orange County seat, large Hispanic community, many older homes needing updates"},
+    {"name": "Anaheim",           "county": "Orange",      "zip": "92801", "region": "Orange County",    "notes": "home of Disneyland, diverse city with a mix of older homes and newer developments"},
+    {"name": "Fullerton",         "county": "Orange",      "zip": "92832", "region": "Orange County",    "notes": "college town with Cal State Fullerton, historic downtown, diverse housing stock"},
+    {"name": "Orange",            "county": "Orange",      "zip": "92868", "region": "Orange County",    "notes": "historic Old Towne Orange, antique district, mix of Victorian and modern homes"},
+    {"name": "Tustin",            "county": "Orange",      "zip": "92780", "region": "Orange County",    "notes": "mix of historic old town and newer Tustin Ranch developments, great location"},
+    {"name": "Mission Viejo",     "county": "Orange",      "zip": "92691", "region": "Orange County",    "notes": "master-planned community, predominantly single-family homes, strong HOA culture"},
+
+    # ── Inland Empire (within ~50 miles of ocean) ──────────────────────────
+    {"name": "Riverside",         "county": "Riverside",   "zip": "92501", "region": "Inland Empire",    "notes": "UC Riverside city, historic Mission Inn, gateway to Inland Empire"},
+    {"name": "Corona",            "county": "Riverside",   "zip": "92879", "region": "Inland Empire",    "notes": "Circle City, fast-growing suburb, strong commuter base to OC and LA"},
+    {"name": "Murrieta",          "county": "Riverside",   "zip": "92562", "region": "Inland Empire",    "notes": "one of fastest-growing SW Riverside cities, excellent schools, master-planned communities"},
+    {"name": "Temecula",          "county": "Riverside",   "zip": "92590", "region": "Inland Empire",    "notes": "wine country destination, Old Town charm, strong tourism and residential growth"},
+    {"name": "Ontario",           "county": "San Bernardino","zip": "91761","region": "Inland Empire",   "notes": "major logistics hub, Ontario Airport, diverse affordable housing market"},
+    {"name": "Rancho Cucamonga",  "county": "San Bernardino","zip": "91730","region": "Inland Empire",   "notes": "affluent IE suburb, Victoria Gardens, top-rated schools, mountain views"},
+
+    # ── San Diego County ───────────────────────────────────────────────────
+    {"name": "Oceanside",         "county": "San Diego",   "zip": "92054", "region": "San Diego County", "notes": "military city near Camp Pendleton, beach access, diverse housing"},
+    {"name": "Carlsbad",          "county": "San Diego",   "zip": "92008", "region": "San Diego County", "notes": "upscale coastal north county, LEGOLAND, premium beachside properties"},
+    {"name": "Encinitas",         "county": "San Diego",   "zip": "92024", "region": "San Diego County", "notes": "surf culture, flower fields, coastal bluffs, upscale north county community"},
+    {"name": "Solana Beach",      "county": "San Diego",   "zip": "92075", "region": "San Diego County", "notes": "small affluent coastal community, Fletcher Cove, premium beachfront values"},
+    {"name": "Del Mar",           "county": "San Diego",   "zip": "92014", "region": "San Diego County", "notes": "iconic racetrack, ultra-premium coastal village, median homes over $3.5M"},
+    {"name": "San Diego",         "county": "San Diego",   "zip": "92101", "region": "San Diego County", "notes": "California's second-largest city, strong military presence, diverse neighborhoods"},
+    {"name": "La Mesa",           "county": "San Diego",   "zip": "91941", "region": "San Diego County", "notes": "Jewel of the Hills, charming village downtown, close-in east county location"},
+    {"name": "El Cajon",          "county": "San Diego",   "zip": "92020", "region": "San Diego County", "notes": "east SD county, large Middle Eastern community, affordable older homes"},
+    {"name": "National City",     "county": "San Diego",   "zip": "91950", "region": "San Diego County", "notes": "south bay city bordering San Diego, diverse community, affordable housing"},
+    {"name": "Chula Vista",       "county": "San Diego",   "zip": "91910", "region": "San Diego County", "notes": "second-largest SD city, diverse community, mix of older south bay and newer eastern developments"},
+    {"name": "Coronado",          "county": "San Diego",   "zip": "92118", "region": "San Diego County", "notes": "island city connected by bridge, Hotel del Coronado, premium military and civilian community"},
+    {"name": "Imperial Beach",    "county": "San Diego",   "zip": "91932", "region": "San Diego County", "notes": "southernmost beach city in US, border community, affordable coastal values"},
 ]
+
+# ── Grouped city list for the bottom strip ─────────────────────────────────
+CITIES_BY_REGION = {
+    "Ventura County": [
+        "Ventura", "Oxnard", "Port Hueneme", "Camarillo",
+        "Thousand Oaks", "Simi Valley", "Ojai",
+    ],
+    "Los Angeles County": [
+        "Malibu", "Santa Monica", "Los Angeles", "Beverly Hills", "West Hollywood",
+        "Culver City", "Inglewood", "El Segundo", "Manhattan Beach", "Hermosa Beach",
+        "Redondo Beach", "Torrance", "Long Beach", "Pasadena", "Glendale",
+        "Burbank", "Santa Clarita", "Pomona", "Whittier", "Downey",
+        "Lakewood", "Norwalk",
+    ],
+    "Orange County": [
+        "Seal Beach", "Huntington Beach", "Newport Beach", "Costa Mesa",
+        "Laguna Beach", "Dana Point", "San Clemente", "Irvine",
+        "Santa Ana", "Anaheim", "Fullerton", "Orange", "Tustin", "Mission Viejo",
+    ],
+    "Inland Empire": [
+        "Riverside", "Corona", "Murrieta", "Temecula",
+        "Ontario", "Rancho Cucamonga",
+    ],
+    "San Diego County": [
+        "Oceanside", "Carlsbad", "Encinitas", "Solana Beach", "Del Mar",
+        "San Diego", "La Mesa", "El Cajon", "National City",
+        "Chula Vista", "Coronado", "Imperial Beach",
+    ],
+}
+
+REGION_COLORS = {
+    "Ventura County":    "#5b8fa8",
+    "Los Angeles County":"#c0622a",
+    "Orange County":     "#e8823a",
+    "Inland Empire":     "#7a6a52",
+    "San Diego County":  "#2a7a6a",
+}
 
 
 def generate_city_content(city: dict) -> dict:
@@ -115,17 +175,34 @@ Return ONLY valid JSON (no markdown, no backticks):
     return json.loads(raw)
 
 
+def build_cities_strip(current_city_name: str) -> str:
+    """Build grouped city strip HTML with region headers and color-coded pills."""
+    html = ''
+    for region, cities in CITIES_BY_REGION.items():
+        color = REGION_COLORS.get(region, "#e8823a")
+        html += f'''
+  <div class="region-group" style="grid-column:1/-1;margin-top:20px">
+    <div class="region-label" style="color:{color};border-color:{color}">{region}</div>
+    <div class="region-pills">'''
+        for city_name in cities:
+            slug = city_name.lower().replace(' ', '-')
+            if city_name == current_city_name:
+                style = f'background:{color};color:#fff;border-color:{color}'
+            else:
+                style = ''
+            html += f'\n      <a href="/{slug}/" class="city-pill" style="{style}">{city_name}</a>'
+        html += '\n    </div>\n  </div>'
+    return html
+
+
 def build_city_page(content: dict, city: dict) -> str:
     slug = city['name'].lower().replace(' ', '-')
     year = datetime.now().year
-    why_points = ''.join([f'<li style="font-size:15px;line-height:1.8;color:#4a3a28;margin:8px 0">{p}</li>' for p in content.get('why_sellers_points', [])])
-
-    # Build city links
-    city_links = ''
-    for c in CITIES[:20]:
-        cs = c['name'].lower().replace(' ', '-')
-        active = 'background:#e8823a;color:#fff;border-color:#e8823a;' if c['name'] == city['name'] else ''
-        city_links += f'<a href="/{cs}/" style="padding:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);font-size:11px;font-weight:600;text-decoration:none;text-align:center;border-radius:8px;display:block;transition:all .15s;{active}">{c["name"]}</a>\n'
+    why_points = ''.join([
+        f'<li style="font-size:15px;line-height:1.8;color:#4a3a28;margin:8px 0">{p}</li>'
+        for p in content.get('why_sellers_points', [])
+    ])
+    cities_strip_html = build_cities_strip(city['name'])
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -134,16 +211,44 @@ def build_city_page(content: dict, city: dict) -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{content['meta_title']}</title>
 <meta name="description" content="{content['meta_description']}">
+<meta property="og:title" content="{content['meta_title']}">
+<meta property="og:description" content="{content['meta_description']}">
 <link rel="canonical" href="https://www.goldencoastcashoffer.com/{slug}/">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QW7L1QHYFR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+  gtag('config', 'G-QW7L1QHYFR');
+</script>
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){{
+        c[a]=c[a]||function(){{(c[a].q=c[a].q||[]).push(arguments)}};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    }})(window, document, "clarity", "script", "wmyw873b7e");
+</script>
+<script type="application/ld+json">
+{{
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "name": "Golden Coast Cash Offer",
+  "telephone": "949-280-5139",
+  "url": "https://www.goldencoastcashoffer.com",
+  "areaServed": "{city['name']}, California"
+}}
+</script>
 <script type="application/ld+json">
 {{
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    {{"@type": "Question","name": "How fast can you buy my house in {city['name']}, CA?","acceptedAnswer": {{"@type": "Answer","text": "We can close in as few as 7 days in {city['name']}. Call us at 949-280-5139 to discuss your timeline."}}}},
-    {{"@type": "Question","name": "Do I need to make repairs before selling my {city['name']} home?","acceptedAnswer": {{"@type": "Answer","text": "Never. We buy houses in {city['name']} in any condition - no repairs, no cleaning required."}}}},
-    {{"@type": "Question","name": "Are there any fees when selling to Golden Coast Cash Offer?","acceptedAnswer": {{"@type": "Answer","text": "Zero fees, zero commissions, zero closing costs. What we offer is exactly what you receive."}}}},
-    {{"@type": "Question","name": "Do you buy homes with tenants in {city['name']}?","acceptedAnswer": {{"@type": "Answer","text": "Yes. We buy California properties with tenants in place - you don't need to deal with California tenant laws."}}}}
+    {{"@type":"Question","name":"How fast can you buy my house in {city['name']}, CA?","acceptedAnswer":{{"@type":"Answer","text":"We can close in as few as 7 days in {city['name']}. Call us at 949-280-5139 to discuss your timeline."}}}},
+    {{"@type":"Question","name":"Do I need to make repairs before selling my {city['name']} home?","acceptedAnswer":{{"@type":"Answer","text":"Never. We buy houses in {city['name']} in any condition — no repairs, no cleaning required."}}}},
+    {{"@type":"Question","name":"Are there any fees when selling to Golden Coast Cash Offer?","acceptedAnswer":{{"@type":"Answer","text":"Zero fees, zero commissions, zero closing costs. What we offer is exactly what you receive."}}}},
+    {{"@type":"Question","name":"Do you buy homes with tenants in {city['name']}?","acceptedAnswer":{{"@type":"Answer","text":"Yes. We buy California properties with tenants in place — you don't need to deal with California tenant laws."}}}}
   ]
 }}
 </script>
@@ -203,10 +308,17 @@ body{{background:var(--sand);color:#2a2018;font-family:'Nunito',sans-serif;font-
 .s-btn{{display:block;padding:11px;font-weight:700;font-size:11px;text-decoration:none;border-radius:20px;text-align:center;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em}}
 .s-btn.orange{{background:var(--sunrise);color:#fff}}
 .s-btn.dark{{background:var(--ocean);color:#fff}}
-.cities-strip{{background:linear-gradient(160deg,var(--ocean),var(--ocean2));padding:40px;position:relative;overflow:hidden}}
-.cities-strip h2{{font-family:'Cormorant Garamond',serif;font-size:24px;color:#fff;margin-bottom:20px;text-align:center;position:relative;z-index:1}}
-.cities-grid{{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:900px;margin:0 auto;position:relative;z-index:1}}
-@media(max-width:640px){{.cities-grid{{grid-template-columns:repeat(3,1fr)}}}}
+
+/* ── Grouped Cities Strip ─────────────────────────────────────── */
+.cities-strip{{background:linear-gradient(160deg,var(--ocean),var(--ocean2));padding:48px 40px}}
+.cities-strip > h2{{font-family:'Cormorant Garamond',serif;font-size:26px;color:#fff;margin-bottom:8px;text-align:center}}
+.cities-strip > p{{text-align:center;color:rgba(255,255,255,0.6);font-size:13px;margin-bottom:8px}}
+.region-group{{margin-top:24px}}
+.region-label{{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;padding:4px 12px;border:1px solid;border-radius:20px;display:inline-block;margin-bottom:10px}}
+.region-pills{{display:flex;flex-wrap:wrap;gap:7px}}
+.city-pill{{padding:7px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.75);font-size:11px;font-weight:600;text-decoration:none;border-radius:20px;transition:all .15s;white-space:nowrap}}
+.city-pill:hover{{background:rgba(255,255,255,0.2);color:#fff}}
+
 footer{{background:var(--ocean);color:rgba(255,255,255,0.4);text-align:center;padding:24px;font-size:11px;border-top:3px solid var(--sunrise)}}
 footer a{{color:var(--gold);text-decoration:none}}
 .sticky{{position:fixed;bottom:0;left:0;right:0;background:var(--ocean);border-top:2px solid var(--sunrise);padding:12px 20px;display:none;align-items:center;justify-content:space-between;z-index:200}}
@@ -237,7 +349,7 @@ footer a{{color:var(--gold);text-decoration:none}}
         <div class="badge">No Repairs Needed</div>
         <div class="badge">No Agent Fees</div>
         <div class="badge">Close in 7 Days</div>
-        <div class="badge">Any Condition</div>
+        <div class="badge">Tenants OK</div>
       </div>
     </div>
     <div class="hero-form">
@@ -324,19 +436,22 @@ footer a{{color:var(--gold);text-decoration:none}}
         <strong>4.</strong> Walk away with cash
       </p>
     </div>
+    <div class="sidebar-card">
+      <h3>California Sellers</h3>
+      <p style="font-size:12px;color:#7a6a52;line-height:1.7;margin:0">We handle tenant situations, probate, trust sales, and all California-specific complexities — so you don't have to.</p>
+    </div>
   </div>
 </div>
 
 <div class="cities-strip">
   <h2>We Buy Houses Across Southern California</h2>
-  <div class="cities-grid">
-    {city_links}
-  </div>
+  <p>{len(CITIES)} cities · OC · LA · San Diego · Ventura · Inland Empire</p>
+  {cities_strip_html}
 </div>
 
 <footer>
-  {year} Golden Coast Cash Offer · <a href="/">goldencoastcashoffer.com</a> · 949-280-5139<br>
-  Serving {city['name']} and all of Orange County, San Diego, and Los Angeles
+  © {year} Golden Coast Cash Offer · <a href="/">goldencoastcashoffer.com</a> · 949-280-5139<br>
+  Serving {city['name']} and all of Southern California
 </footer>
 
 <div class="sticky">
@@ -364,22 +479,28 @@ async function submitForm(e) {{
 
 
 def main():
-    print(f"Generating {len(CITIES)} city landing pages")
+    print(f"Generating {len(CITIES)} SoCal city landing pages — {datetime.now().isoformat()}")
+    print()
+
     for i, city in enumerate(CITIES):
         slug = city['name'].lower().replace(' ', '-')
         output_dir = Path(slug)
         output_file = output_dir / "index.html"
-        print(f"  [{i+1}/{len(CITIES)}] Generating {city['name']}...")
+
+        print(f"  [{i+1}/{len(CITIES)}] {city['name']} ({city['region']})...")
         try:
             content = generate_city_content(city)
             html = build_city_page(content, city)
             output_dir.mkdir(parents=True, exist_ok=True)
             with open(output_file, "w", encoding="utf-8") as f:
                 f.write(html)
-            print(f"    Saved: {output_file}")
+            print(f"    ✓ {output_file}")
         except Exception as e:
-            print(f"    Error: {e}")
-    print("Done!")
+            print(f"    ✗ Error: {e}")
+
+    print()
+    print(f"Done! {len(CITIES)} city folders generated.")
+    print("Commit all new folders to GitHub — Netlify will auto-deploy.")
 
 
 if __name__ == "__main__":
