@@ -9,22 +9,34 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-python@v5
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install anthropic
+
+      - name: Install dependencies
+        run: pip install anthropic
+
       - name: Generate city pages
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python scripts/generate_cities.py
-      - run: python scripts/generate_sitemap.py
-      - run: |
+
+      - name: Update sitemap
+        run: python scripts/generate_sitemap.py
+
+      - name: Commit and push
+        run: |
           git config --global user.name "Coastal Cash Offer Bot"
           git config --global user.email "bot@coastalcashoffer.com"
-          git pull --rebase origin main
           git add -A
           git diff --staged --quiet || git commit -m "Auto: Generated city landing pages"
+          git fetch origin main
+          git rebase origin/main
           git push
