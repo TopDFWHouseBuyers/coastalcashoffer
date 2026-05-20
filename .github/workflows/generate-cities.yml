@@ -13,7 +13,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -37,4 +36,4 @@ jobs:
           git config --global user.email "bot@coastalcashoffer.com"
           git add -A
           git diff --staged --quiet || git commit -m "Auto: Generated city landing pages"
-          git push --force-with-lease origin main
+          git push
