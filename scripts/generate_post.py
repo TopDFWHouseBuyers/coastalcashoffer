@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Golden Coast Cash Offer - Automated Blog Generator
-Southern California market - OC, San Diego, LA
+Southern California market - OC, San Diego, LA, Ventura, IE
 Runs Mon/Wed/Fri/Sat at 8am CT
 """
 
@@ -14,6 +14,16 @@ from datetime import datetime
 from pathlib import Path
 
 CITIES = [
+    # Ventura County
+    "Ventura", "Oxnard", "Camarillo", "Thousand Oaks", "Simi Valley", "Ojai",
+    # Los Angeles County
+    "Los Angeles", "Long Beach", "Santa Monica", "Pasadena", "Torrance",
+    "Malibu", "Beverly Hills", "Glendale", "Burbank", "Pomona",
+    "Whittier", "Downey", "Compton", "Inglewood", "Hawthorne",
+    "Gardena", "Carson", "El Segundo", "Manhattan Beach", "Hermosa Beach",
+    "Redondo Beach", "Lakewood", "Cerritos", "Norwalk", "Bellflower",
+    "Paramount", "El Monte", "West Covina", "Alhambra", "Monterey Park",
+    "Arcadia", "Santa Clarita",
     # Orange County
     "Irvine", "Anaheim", "Santa Ana", "Huntington Beach", "Newport Beach",
     "Mission Viejo", "Laguna Hills", "Laguna Niguel", "Lake Forest",
@@ -21,14 +31,15 @@ CITIES = [
     "Tustin", "Fountain Valley", "Garden Grove", "Fullerton", "Orange",
     "Yorba Linda", "Dana Point", "Laguna Beach", "Brea", "Placentia",
     "Buena Park", "La Habra", "Stanton", "Westminster", "Seal Beach",
-    # San Diego
+    "Rancho Santa Margarita", "Laguna Woods",
+    # Inland Empire
+    "Riverside", "Corona", "Murrieta", "Temecula", "Menifee",
+    "Lake Elsinore", "Ontario", "Rancho Cucamonga",
+    # San Diego County
     "San Diego", "Chula Vista", "Oceanside", "Escondido", "El Cajon",
     "Vista", "Carlsbad", "San Marcos", "Santee", "La Mesa",
-    "Poway", "National City", "El Cajon", "Spring Valley", "Lemon Grove",
-    # Los Angeles
-    "Los Angeles", "Long Beach", "Santa Monica", "Pasadena", "Torrance",
-    "Malibu", "Beverly Hills", "Glendale", "Burbank", "Pomona",
-    "Whittier", "Downey", "Compton", "Inglewood", "Hawthorne",
+    "Poway", "National City", "Lemon Grove", "Coronado",
+    "La Jolla", "Del Mar", "Encinitas", "Solana Beach",
 ]
 
 CITY_TOPICS = [
@@ -53,8 +64,9 @@ EVERGREEN_TOPICS = [
     {"title": "Selling Your SoCal Home Before Foreclosure", "slug": "sell-home-before-foreclosure-california", "keyword": "sell home before foreclosure California", "category": "foreclosure"},
     {"title": "Behind on Mortgage Payments in California? Your Options", "slug": "behind-on-mortgage-payments-california", "keyword": "behind on mortgage payments California", "category": "foreclosure"},
     {"title": "Selling an Inherited House in California - Complete Guide", "slug": "selling-inherited-house-california", "keyword": "selling inherited house California", "category": "inheritance"},
-    {"title": "California Probate Process for Selling a House", "slug": "california-probate-process-selling-house", "keyword": "California probate selling house", "category": "inheritance"},
+    {"title": "California Probate Process for Selling a House Guide 2026", "slug": "california-probate-process-selling-house", "keyword": "California probate selling house", "category": "inheritance"},
     {"title": "Selling an Inherited Property in Orange County", "slug": "selling-inherited-property-orange-county", "keyword": "selling inherited property Orange County", "category": "inheritance"},
+    {"title": "Selling an Inherited Property in San Diego County", "slug": "selling-inherited-property-san-diego", "keyword": "selling inherited property San Diego", "category": "inheritance"},
     {"title": "What Is a Cash Home Buyer? How It Works in California", "slug": "what-is-cash-home-buyer-california", "keyword": "what is a cash home buyer California", "category": "education"},
     {"title": "Cash Offer vs Traditional Sale in California - Which Is Better?", "slug": "cash-offer-vs-traditional-sale-california", "keyword": "cash offer vs traditional sale California", "category": "education"},
     {"title": "The Real Cost of Selling a House in California", "slug": "real-cost-selling-house-california", "keyword": "cost of selling a house California", "category": "education"},
@@ -63,6 +75,7 @@ EVERGREEN_TOPICS = [
     {"title": "California Capital Gains Tax When Selling Your Home", "slug": "california-capital-gains-tax-selling-home", "keyword": "California capital gains tax selling home", "category": "education"},
     {"title": "Is It Better to Sell to a Cash Buyer or Agent in California?", "slug": "cash-buyer-vs-agent-california", "keyword": "cash buyer vs agent California", "category": "education"},
     {"title": "How to Get a Fair Cash Offer on Your California Home", "slug": "fair-cash-offer-california-home", "keyword": "fair cash offer California home", "category": "education"},
+    {"title": "What SoCal Homeowners Need to Know About Cash Buyers in 2026", "slug": "socal-homeowners-cash-buyers-2026", "keyword": "SoCal cash buyers 2026", "category": "education"},
     {"title": "Selling a House With Tenants in California - Landlord Guide", "slug": "selling-house-with-tenants-california", "keyword": "selling house with tenants California", "category": "situations"},
     {"title": "California Tenant Protection Laws - What Landlords Need to Know", "slug": "california-tenant-protection-laws-landlords", "keyword": "California tenant protection laws landlords selling", "category": "situations"},
     {"title": "Selling a Fire-Damaged Home in Southern California", "slug": "sell-fire-damaged-home-southern-california", "keyword": "sell fire damaged home Southern California", "category": "situations"},
@@ -74,10 +87,14 @@ EVERGREEN_TOPICS = [
     {"title": "Downsizing in Orange County - How to Sell Fast", "slug": "downsizing-orange-county-sell-fast", "keyword": "downsizing Orange County sell home", "category": "situations"},
     {"title": "Selling a Rental Property in California - Cash vs 1031", "slug": "selling-rental-property-california", "keyword": "selling rental property California", "category": "situations"},
     {"title": "How to Sell Your California Home When Relocating", "slug": "sell-home-relocating-california", "keyword": "sell home relocating California", "category": "situations"},
-    {"title": "Orange County Real Estate Market 2025 - What Sellers Need to Know", "slug": "orange-county-real-estate-market-2025", "keyword": "Orange County real estate market 2025", "category": "market"},
-    {"title": "Is Now a Good Time to Sell Your OC Home?", "slug": "good-time-sell-orange-county-home", "keyword": "good time sell Orange County home", "category": "market"},
-    {"title": "San Diego Real Estate Market 2025 - Seller Guide", "slug": "san-diego-real-estate-market-2025", "keyword": "San Diego real estate market 2025", "category": "market"},
-    {"title": "Southern California Home Prices - What Sellers Need to Know", "slug": "southern-california-home-prices-sellers", "keyword": "Southern California home prices sellers", "category": "market"},
+    {"title": "How to Sell a House With Back Taxes in California", "slug": "sell-house-back-taxes-california", "keyword": "sell house back taxes California", "category": "situations"},
+    {"title": "Selling a House in an HOA Community in Orange County", "slug": "selling-house-hoa-orange-county", "keyword": "selling house HOA Orange County", "category": "situations"},
+    {"title": "Orange County Real Estate Market 2026 - What Sellers Need to Know", "slug": "orange-county-real-estate-market-2026", "keyword": "Orange County real estate market 2026", "category": "market"},
+    {"title": "Is Now a Good Time to Sell Your OC Home in 2026?", "slug": "good-time-sell-orange-county-home-2026", "keyword": "good time sell Orange County home 2026", "category": "market"},
+    {"title": "San Diego Real Estate Market 2026 - Seller Guide", "slug": "san-diego-real-estate-market-2026", "keyword": "San Diego real estate market 2026", "category": "market"},
+    {"title": "Southern California Home Prices 2026 - What Sellers Need to Know", "slug": "southern-california-home-prices-2026", "keyword": "Southern California home prices 2026", "category": "market"},
+    {"title": "Los Angeles Real Estate Market 2026 - Seller Guide", "slug": "los-angeles-real-estate-market-2026", "keyword": "Los Angeles real estate market 2026", "category": "market"},
+    {"title": "Inland Empire Real Estate 2026 - Why Cash Sales Are Growing", "slug": "inland-empire-real-estate-2026", "keyword": "Inland Empire real estate 2026", "category": "market"},
 ]
 
 
@@ -129,7 +146,7 @@ COMPANY INFO:
 - Name: Golden Coast Cash Offer
 - Phone: 949-280-5139
 - Website: https://www.goldencoastcashoffer.com
-- Service area: Orange County (Irvine, Mission Viejo, Newport Beach, Laguna Hills, Lake Forest, San Clemente, San Juan Capistrano, Aliso Viejo, Huntington Beach, Tustin, Fountain Valley, Costa Mesa, Garden Grove, Fullerton, Anaheim, Santa Ana, Orange, Yorba Linda, Dana Point, Laguna Beach, Brea), San Diego, Los Angeles and all of Southern California
+- Service area: Orange County (Irvine, Mission Viejo, Newport Beach, Laguna Hills, Lake Forest, San Clemente, San Juan Capistrano, Aliso Viejo, Huntington Beach, Tustin, Fountain Valley, Costa Mesa, Garden Grove, Fullerton, Anaheim, Santa Ana, Orange, Yorba Linda, Dana Point, Laguna Beach, Brea), San Diego, Los Angeles, Ventura County and all of Southern California
 
 ASSIGNMENT:
 - Title: {topic['title']}
@@ -344,12 +361,16 @@ footer a{{color:#f8d264;text-decoration:none}}
         <strong>4.</strong> Walk away with cash
       </p>
     </div>
+    <div class="sidebar-card">
+      <h3>California Sellers</h3>
+      <p style="font-size:12px;color:#7a6a52;line-height:1.7;margin:0">We handle tenant situations, probate, trust sales, and all California-specific complexities so you don't have to.</p>
+    </div>
   </div>
 </div>
 
 <footer>
   {year} Golden Coast Cash Offer · <a href="/">goldencoastcashoffer.com</a> · 949-280-5139<br>
-  Serving Orange County, San Diego, Los Angeles and all of Southern California
+  Serving Orange County, San Diego, Los Angeles, Ventura County and all of Southern California
 </footer>
 
 </body>
