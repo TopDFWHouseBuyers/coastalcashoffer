@@ -6,42 +6,61 @@
 <title>Blog - Golden Coast Cash Offer | Southern California Home Seller Resources</title>
 <meta name="description" content="Expert guides for Southern California homeowners - how to sell fast, avoid foreclosure, handle inherited properties, divorce sales, and more.">
 <link rel="canonical" href="https://www.goldencoastcashoffer.com/blog/">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QW7L1QHYFR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-QW7L1QHYFR');
+</script>
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wmyw873b7e");
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:#fdfaf5;color:#2a2018;font-family:'Nunito',sans-serif;font-weight:300}
-.site-nav{background:#0f4a63;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #e8823a;position:sticky;top:0;z-index:100}
+.site-nav{background:#0f4a63;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #e8823a;position:sticky;top:0;z-index:100}
 .nav-logo{color:#f8d264;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:20px;text-decoration:none}
 .nav-links{display:flex;align-items:center;gap:20px}
 .nav-links a{color:rgba(255,255,255,0.7);font-size:12px;font-weight:600;text-decoration:none;text-transform:uppercase;letter-spacing:0.05em}
 .nav-cta{background:#e8823a;color:#fff !important;padding:9px 18px;border-radius:20px}
-.hero{background:linear-gradient(160deg,#0f4a63,#1a6b8a);padding:56px 40px;text-align:center}
-.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,48px);color:#fff;font-weight:700;margin-bottom:12px}
-.hero p{font-size:15px;color:rgba(255,255,255,0.7);max-width:560px;margin:0 auto}
+.blog-hero{background:linear-gradient(160deg,#0f4a63,#1a6b8a);padding:56px 40px;text-align:center;position:relative;overflow:hidden}
+.blog-hero::before{content:'';position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1400&q=60') center/cover;opacity:0.1}
+.blog-hero-inner{position:relative;z-index:1}
+.blog-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,4vw,48px);color:#fff;font-weight:700;margin-bottom:12px}
+.blog-hero p{font-size:15px;color:rgba(255,255,255,0.7);max-width:600px;margin:0 auto 20px}
+.blog-hero .count{font-size:12px;color:#f8d264;font-weight:600;letter-spacing:0.1em;text-transform:uppercase}
 .blog-wrap{max-width:1100px;margin:0 auto;padding:48px 24px}
-.section-label{font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#e8823a;margin-bottom:16px}
-.section-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:#0f4a63;margin-bottom:28px}
-.post-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:48px}
-@media(max-width:768px){.post-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:480px){.post-grid{grid-template-columns:1fr}}
-.post-card{background:#fff;border:1px solid #ddd5c0;border-radius:12px;overflow:hidden;transition:all .2s}
-.post-card:hover{box-shadow:0 4px 20px rgba(0,0,0,0.08);transform:translateY(-2px)}
-.post-card-cat{background:#0f4a63;color:#f8d264;font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:8px 14px}
-.post-card-body{padding:18px}
-.post-card-body h3{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;color:#0f4a63;line-height:1.3;margin-bottom:10px}
-.post-card-body h3 a{color:inherit;text-decoration:none}
-.post-card-body h3 a:hover{color:#e8823a}
-.post-card-body p{font-size:12px;color:#7a6a52;line-height:1.6;margin-bottom:12px}
-.post-card-link{font-size:11px;font-weight:700;color:#e8823a;text-decoration:none;letter-spacing:0.08em;text-transform:uppercase}
-.cta-band{background:#0f4a63;border-top:3px solid #e8823a;padding:40px;text-align:center;margin-top:48px;border-radius:12px}
-.cta-band h2{font-family:'Cormorant Garamond',serif;font-size:28px;color:#fff;margin-bottom:8px}
-.cta-band p{font-size:14px;color:rgba(255,255,255,0.6);margin-bottom:24px}
+.posts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:900px){.posts-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.posts-grid{grid-template-columns:1fr}}
+.post-card{background:#fff;border:1px solid #ddd5c0;border-radius:8px;padding:24px;transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column}
+.post-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(15,74,99,0.1)}
+.post-meta{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.post-cat{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid}
+.post-date{font-size:11px;color:#9a8a72}
+.post-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:#2a2018;line-height:1.3;margin-bottom:10px}
+.post-title a{color:inherit;text-decoration:none}
+.post-title a:hover{color:#e8823a}
+.post-excerpt{font-size:13px;color:#7a6a52;line-height:1.7;margin-bottom:16px;flex:1}
+.post-read-more{font-size:12px;font-weight:700;color:#e8823a;text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;margin-top:auto}
+.cta-band{background:linear-gradient(135deg,#0f4a63,#1a6b8a);padding:48px 24px;text-align:center;margin-top:48px;border-radius:12px}
+.cta-band h2{font-family:'Cormorant Garamond',serif;font-size:28px;color:#fff;margin-bottom:12px}
+.cta-band p{color:rgba(255,255,255,0.7);font-size:15px;margin-bottom:24px}
 .cta-band a{display:inline-block;background:#e8823a;color:#fff;padding:14px 32px;font-weight:700;font-size:13px;text-decoration:none;border-radius:20px}
-footer{background:#0f4a63;color:rgba(255,255,255,0.4);text-align:center;padding:24px;font-size:11px;border-top:3px solid #e8823a;margin-top:40px}
+footer{background:#0f4a63;color:rgba(255,255,255,0.4);text-align:center;padding:24px;font-size:11px;border-top:3px solid #e8823a}
 footer a{color:#f8d264;text-decoration:none}
 </style>
 </head>
 <body>
+
 <nav class="site-nav">
   <a href="/" class="nav-logo">Golden Coast Cash Offer</a>
   <div class="nav-links">
@@ -51,27 +70,273 @@ footer a{color:#f8d264;text-decoration:none}
     <a href="/#offer" class="nav-cta">Get Cash Offer</a>
   </div>
 </nav>
-<div class="hero">
-  <h1>🌊 SoCal Seller Resources</h1>
-  <p>Expert guides for Orange County, San Diego, and LA homeowners navigating every situation.</p>
-</div>
-<div class="blog-wrap">
-  <div class="section-label">By Situation</div>
-  <div class="section-title">Whatever You're Going Through, We Can Help</div>
-  <div class="post-grid">
-    <div class="post-card"><div class="post-card-cat">Foreclosure</div><div class="post-card-body"><h3><a href="/blog/stop-foreclosure-california/">How to Stop Foreclosure in California</a></h3><p>California foreclosure timelines move fast. Know your options before it's too late.</p><a href="/blog/stop-foreclosure-california/" class="post-card-link">Read Article →</a></div></div>
-    <div class="post-card"><div class="post-card-cat">Divorce</div><div class="post-card-body"><h3><a href="/blog/selling-house-during-divorce-california/">Selling a House During Divorce in California</a></h3><p>California community property laws make home sales complex during divorce. Here's how cash sales simplify everything.</p><a href="/blog/selling-house-during-divorce-california/" class="post-card-link">Read Article →</a></div></div>
-    <div class="post-card"><div class="post-card-cat">Inheritance</div><div class="post-card-body"><h3><a href="/blog/selling-inherited-house-california/">Selling an Inherited House in California</a></h3><p>California probate is complex. We work with estate attorneys and buy inherited properties as-is.</p><a href="/blog/selling-inherited-house-california/" class="post-card-link">Read Article →</a></div></div>
-    <div class="post-card"><div class="post-card-cat">Tenants</div><div class="post-card-body"><h3><a href="/blog/selling-house-with-tenants-california/">Selling With Tenants in California</a></h3><p>California tenant protection laws make evictions costly. We buy with tenants in place.</p><a href="/blog/selling-house-with-tenants-california/" class="post-card-link">Read Article →</a></div></div>
-    <div class="post-card"><div class="post-card-cat">Education</div><div class="post-card-body"><h3><a href="/blog/cash-offer-vs-traditional-sale-california/">Cash Offer vs Traditional Sale in California</a></h3><p>An honest comparison — including California's high commission costs.</p><a href="/blog/cash-offer-vs-traditional-sale-california/" class="post-card-link">Read Article →</a></div></div>
-    <div class="post-card"><div class="post-card-cat">Education</div><div class="post-card-body"><h3><a href="/blog/real-cost-selling-house-california/">The Real Cost of Selling in California</a></h3><p>On a $1M home, traditional selling costs can top $80,000. Here's the full breakdown.</p><a href="/blog/real-cost-selling-house-california/" class="post-card-link">Read Article →</a></div></div>
+
+<div class="blog-hero">
+  <div class="blog-hero-inner">
+    <h1>🌊 SoCal Seller Resources</h1>
+    <p>Expert guides for Orange County, San Diego, LA, and Ventura County homeowners navigating every situation.</p>
+    <div class="count">27 Articles · Updated Regularly</div>
   </div>
+</div>
+
+<div class="blog-wrap">
+  <div class="posts-grid">
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#16a08515;color:#16a085;border-color:#16a08540">Education</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/real-cost-selling-house-california/">Real Cost of Selling a House in California (2024 Guide)</a></h2>
+      <p class="post-excerpt">Discover the true costs of selling your California home—from agent fees to transfer taxes. Orange County homeowners: get a detailed breakdown here.</p>
+      <a href="/blog/real-cost-selling-house-california/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#c0392b15;color:#c0392b;border-color:#c0392b40">Foreclosure</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/stop-foreclosure-california/">Stop Foreclosure in California - Know Your Legal Options</a></h2>
+      <p class="post-excerpt">Facing foreclosure in California? Learn your legal options to stop foreclosure, including loan modification, repayment plans, and fast sale solutions.</p>
+      <a href="/blog/stop-foreclosure-california/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#d3540015;color:#d35400;border-color:#d3540040">Inheritance</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/selling-inherited-house-california/">Selling an Inherited House in California - Complete Guide</a></h2>
+      <p class="post-excerpt">Navigate California's inherited property process with confidence. Learn about probate, taxes, and selling options for Orange County, LA & San Diego homes.</p>
+      <a href="/blog/selling-inherited-house-california/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#16a08515;color:#16a085;border-color:#16a08540">Education</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/what-is-cash-home-buyer-california/">What Is a Cash Home Buyer? California Guide | Golden Coast</a></h2>
+      <p class="post-excerpt">Learn how cash home buyers work in California. Fast closings, no repairs, skip agent fees. Serving Orange County & Southern California. Call 949-280-5139.</p>
+      <a href="/blog/what-is-cash-home-buyer-california/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#8e44ad15;color:#8e44ad;border-color:#8e44ad40">Divorce</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/selling-house-during-divorce-california/">Selling a House During Divorce in California - Complete Guide</a></h2>
+      <p class="post-excerpt">Navigate selling your California home during divorce. Learn about community property laws, tax implications, and fast sale options in Orange County and SoCal.</p>
+      <a href="/blog/selling-house-during-divorce-california/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#d3540015;color:#d35400;border-color:#d3540040">Inheritance</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/selling-inherited-property-orange-county/">Selling an Inherited Property in Orange County | Quick Guide</a></h2>
+      <p class="post-excerpt">Navigate California probate, taxes, and selling inherited property in Orange County. Get expert guidance and fair cash offers. Call 949-280-5139 today.</p>
+      <a href="/blog/selling-inherited-property-orange-county/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#0f6b8a15;color:#0f6b8a;border-color:#0f6b8a40">City Guide</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-my-house-fast-lake-forest-ca-16/">Sell Inherited Property Lake Forest CA | Quick Cash Offers</a></h2>
+      <p class="post-excerpt">Selling inherited property in Lake Forest, CA? Get a fair cash offer in 24 hours. No repairs, no fees. Call 949-280-5139 for your free consultation.</p>
+      <a href="/blog/sell-my-house-fast-lake-forest-ca-16/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#0f6b8a15;color:#0f6b8a;border-color:#0f6b8a40">City Guide</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-my-house-fast-mission-viejo-ca-10/">Sell My House Fast Mission Viejo CA - Cash Offer Today</a></h2>
+      <p class="post-excerpt">Need to sell your house fast in Mission Viejo, CA? Get a fair cash offer today. No fees, no repairs, close in days. Call 949-280-5139 now!</p>
+      <a href="/blog/sell-my-house-fast-mission-viejo-ca-10/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#0f6b8a15;color:#0f6b8a;border-color:#0f6b8a40">City Guide</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-my-house-fast-tustin-ca-26/">Selling Inherited Property in Tustin CA - Step-by-Step Guide</a></h2>
+      <p class="post-excerpt">Complete guide to selling inherited property in Tustin, CA. Learn probate rules, tax implications, and how cash buyers simplify the process. Call 949-280-5139.</p>
+      <a href="/blog/sell-my-house-fast-tustin-ca-26/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#0f6b8a15;color:#0f6b8a;border-color:#0f6b8a40">City Guide</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-my-house-fast-santa-ana-ca-4/">Sell My House Fast Santa Ana CA | As-Is Cash Offers</a></h2>
+      <p class="post-excerpt">Need to sell your house fast in Santa Ana, CA? Get a cash offer in 24 hours. No repairs, no fees, no hassle. Call 949-280-5139 for your free offer today.</p>
+      <a href="/blog/sell-my-house-fast-santa-ana-ca-4/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#0f6b8a15;color:#0f6b8a;border-color:#0f6b8a40">City Guide</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-my-house-fast-newport-beach-ca-8/">Sell Your Rental Property Fast Newport Beach CA | Cash Offer</a></h2>
+      <p class="post-excerpt">Tired landlord? Sell your Newport Beach rental property fast for cash. No repairs, skip tenant issues. Call 949-280-5139 for a fair offer today.</p>
+      <a href="/blog/sell-my-house-fast-newport-beach-ca-8/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#0f6b8a15;color:#0f6b8a;border-color:#0f6b8a40">City Guide</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-my-house-fast-san-clemente-ca-18/">Sell Rental Property Fast San Clemente CA | Cash Offer</a></h2>
+      <p class="post-excerpt">Tired landlord? Sell your San Clemente rental property fast for cash. No repairs, skip tenant issues. Call 949-280-5139 for a fair offer today.</p>
+      <a href="/blog/sell-my-house-fast-san-clemente-ca-18/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#0f6b8a15;color:#0f6b8a;border-color:#0f6b8a40">City Guide</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-my-house-fast-san-juan-capistrano-ca-20/">Sell My House Fast San Juan Capistrano CA | Cash Offer</a></h2>
+      <p class="post-excerpt">Need to sell your house fast in San Juan Capistrano? Get a fair cash offer in 24 hours. No fees, no repairs, no hassle. Call 949-280-5139 today!</p>
+      <a href="/blog/sell-my-house-fast-san-juan-capistrano-ca-20/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#0f6b8a15;color:#0f6b8a;border-color:#0f6b8a40">City Guide</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-my-house-fast-huntington-beach-ca-6/">Sell Inherited Property Fast Huntington Beach CA Guide</a></h2>
+      <p class="post-excerpt">Complete guide to selling inherited property in Huntington Beach, CA. Learn California probate laws, tax implications & how cash buyers simplify the process.</p>
+      <a href="/blog/sell-my-house-fast-huntington-beach-ca-6/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#0f6b8a15;color:#0f6b8a;border-color:#0f6b8a40">City Guide</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-my-house-fast-irvine-ca-0/">Sell My House Fast Irvine CA - Cash Offer in 24 Hours</a></h2>
+      <p class="post-excerpt">Need to sell your house fast in Irvine, CA? Get a cash offer in 24 hours. No fees, no repairs, no hassle. Call 949-280-5139 for your free offer today.</p>
+      <a href="/blog/sell-my-house-fast-irvine-ca-0/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#0f6b8a15;color:#0f6b8a;border-color:#0f6b8a40">City Guide</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-my-house-fast-laguna-hills-ca-12/">Sell My House Fast Laguna Hills CA | Cash Offer in 24 Hours</a></h2>
+      <p class="post-excerpt">Need to sell your house fast in Laguna Hills CA? Get a fair cash offer in 24 hours. No fees, no repairs. Call 949-280-5139 for your free offer today.</p>
+      <a href="/blog/sell-my-house-fast-laguna-hills-ca-12/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#0f6b8a15;color:#0f6b8a;border-color:#0f6b8a40">City Guide</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-my-house-fast-anaheim-ca-2/">Sell My House Fast Anaheim CA - Get Cash Offers Today</a></h2>
+      <p class="post-excerpt">Need to sell your house fast in Anaheim? Get a fair cash offer in 24 hours. No repairs, no fees, no waiting. Call 949-280-5139 for your free offer.</p>
+      <a href="/blog/sell-my-house-fast-anaheim-ca-2/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#0f6b8a15;color:#0f6b8a;border-color:#0f6b8a40">City Guide</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-my-house-fast-laguna-niguel-ca-14/">Sell My House Fast Laguna Niguel CA | Cash Home Buyers</a></h2>
+      <p class="post-excerpt">Need to sell your house fast in Laguna Niguel, CA? Get a fair cash offer in 24 hours. No repairs, no fees, close on your timeline. Call 949-280-5139.</p>
+      <a href="/blog/sell-my-house-fast-laguna-niguel-ca-14/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#0f6b8a15;color:#0f6b8a;border-color:#0f6b8a40">City Guide</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-my-house-fast-aliso-viejo-ca-22/">Sell My House Fast Aliso Viejo CA | Cash Offer in 24 Hours</a></h2>
+      <p class="post-excerpt">Need to sell your house fast in Aliso Viejo, CA? Get a fair cash offer in 24 hours. No repairs, no fees. Call 949-280-5139 for your free offer today.</p>
+      <a href="/blog/sell-my-house-fast-aliso-viejo-ca-22/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#0f6b8a15;color:#0f6b8a;border-color:#0f6b8a40">City Guide</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-my-house-fast-costa-mesa-ca-24/">Sell My House Fast Costa Mesa CA | As-Is Cash Offers</a></h2>
+      <p class="post-excerpt">Need to sell your house fast in Costa Mesa, CA? Get a fair cash offer in 24 hours. No repairs, no fees. Call 949-280-5139 for your free offer today.</p>
+      <a href="/blog/sell-my-house-fast-costa-mesa-ca-24/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#8e44ad15;color:#8e44ad;border-color:#8e44ad40">Divorce</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-home-fast-divorce-orange-county/">Sell Your Orange County Home Fast During Divorce | Quick Sale</a></h2>
+      <p class="post-excerpt">Going through divorce in Orange County? Learn how to sell your home quickly and fairly. Get a cash offer today. Call 949-280-5139 for a free consultation.</p>
+      <a href="/blog/sell-home-fast-divorce-orange-county/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#c0392b15;color:#c0392b;border-color:#c0392b40">Foreclosure</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/behind-on-mortgage-payments-california/">Behind on Mortgage Payments in California? Your Options</a></h2>
+      <p class="post-excerpt">Falling behind on mortgage payments in California? Learn your rights, timeline, and options including loan modification, short sale, and selling for cash.</p>
+      <a href="/blog/behind-on-mortgage-payments-california/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#c0392b15;color:#c0392b;border-color:#c0392b40">Foreclosure</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/sell-home-before-foreclosure-california/">Sell Your Home Before Foreclosure in California | Quick Options</a></h2>
+      <p class="post-excerpt">Facing foreclosure in Southern California? Learn how to sell your home fast and protect your credit. Get a cash offer today at 949-280-5139.</p>
+      <a href="/blog/sell-home-before-foreclosure-california/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#d3540015;color:#d35400;border-color:#d3540040">Inheritance</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/california-probate-process-selling-house/">California Probate Process for Selling a House Guide 2024</a></h2>
+      <p class="post-excerpt">Navigate California probate home sales with confidence. Learn about timelines, costs, and court requirements for selling inherited property in Southern Californ</p>
+      <a href="/blog/california-probate-process-selling-house/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#16a08515;color:#16a085;border-color:#16a08540">Education</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/cash-offer-vs-traditional-sale-california/">Cash Offer vs Traditional Sale California - Compare Options</a></h2>
+      <p class="post-excerpt">Comparing cash offer vs traditional sale in California? Learn about timelines, costs, and which option saves Southern California homeowners the most money.</p>
+      <a href="/blog/cash-offer-vs-traditional-sale-california/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#c0392b15;color:#c0392b;border-color:#c0392b40">Foreclosure</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/pre-foreclosure-southern-california/">Pre-Foreclosure in Southern California - What It Means</a></h2>
+      <p class="post-excerpt">Facing pre-foreclosure in Southern California? Learn your options, timelines, and California-specific laws that protect homeowners. Get help today.</p>
+      <a href="/blog/pre-foreclosure-southern-california/" class="post-read-more">Read Article →</a>
+    </article>
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-cat" style="background:#16a08515;color:#16a085;border-color:#16a08540">Education</span>
+        <span class="post-date">June 03, 2026</span>
+      </div>
+      <h2 class="post-title"><a href="/blog/california-community-property-selling-home/">CA Community Property Laws When Selling Your Home | Guide</a></h2>
+      <p class="post-excerpt">Navigate California community property laws when selling your home during divorce. Expert guidance for Orange County homeowners on dividing real estate assets.</p>
+      <a href="/blog/california-community-property-selling-home/" class="post-read-more">Read Article →</a>
+    </article>
+  </div>
+
   <div class="cta-band">
     <h2>Ready to Sell Your SoCal Home?</h2>
-    <p>Get a fair cash offer in 24 hours. No fees, no repairs, no commissions.</p>
+    <p>Get a fair cash offer in 24 hours. No fees, no repairs, no commissions. Close in as few as 7 days.</p>
     <a href="/#offer">Get My Free Cash Offer 🌊</a>
   </div>
 </div>
-<footer>© 2025 Golden Coast Cash Offer · <a href="/">goldencoastcashoffer.com</a> · 949-280-5139</footer>
+
+<footer>
+  © 2026 Golden Coast Cash Offer · <a href="/">goldencoastcashoffer.com</a> · 949-280-5139<br>
+  Serving Orange County, San Diego, Los Angeles, Ventura County and all of Southern California
+</footer>
+
 </body>
 </html>
