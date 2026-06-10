@@ -2,16 +2,17 @@
 """
 Golden Coast Cash Offer - Blog Index Generator
 Auto-scans all blog post folders and rebuilds the blog index page.
+Extracts publish date from Article schema JSON inside each post.
 Run: python scripts/generate_blog_index.py
 """
 
 import re
+import json
 from pathlib import Path
 from datetime import datetime
 
 
 def get_post_meta(post_dir: Path) -> dict | None:
-    """Extract title and description from a blog post's index.html."""
     index_file = post_dir / "index.html"
     if not index_file.exists():
         return None
@@ -28,9 +29,34 @@ def get_post_meta(post_dir: Path) -> dict | None:
     desc_match = re.search(r'<meta name="description" content="(.*?)"', content)
     description = desc_match.group(1).strip() if desc_match else "Expert guide for Southern California homeowners."
 
-    # Extract H1
-    h1_match = re.search(r'<h1[^>]*>(.*?)</h1>', content, re.DOTALL)
-    h1 = re.sub(r'<[^>]+>', '', h1_match.group(1)).strip() if h1_match else title
+    # Extract publish date from Article schema JSON
+    pub_date = None
+    sort_time = index_file.stat().st_mtime
+    try:
+        schema_matches = re.findall(r'<script type="application/ld\+json">(.*?)</script>', content, re.DOTALL)
+        for schema_str in schema_matches:
+            try:
+                schema = json.loads(schema_str.strip())
+                if schema.get('@type') == 'Article' and schema.get('datePublished'):
+                    date_str = schema['datePublished']
+                    dt = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+                    pub_date = dt.strftime("%B %d, %Y")
+                    sort_time = dt.timestamp()
+                    break
+            except (json.JSONDecodeError, ValueError):
+                continue
+    except Exception:
+        pass
+
+    # Fallback to hero-meta div
+    if not pub_date:
+        meta_match = re.search(r'class="hero-meta"[^>]*>Published ([^<·]+)', content)
+        if meta_match:
+            pub_date = meta_match.group(1).strip()
+
+    # Final fallback to file modified time
+    if not pub_date:
+        pub_date = datetime.fromtimestamp(sort_time).strftime("%B %d, %Y")
 
     # Detect category from slug
     slug = post_dir.name
@@ -56,19 +82,14 @@ def get_post_meta(post_dir: Path) -> dict | None:
         category = "Education"
         cat_color = "#16a085"
 
-    # Get file modified time as publish date
-    mod_time = index_file.stat().st_mtime
-    pub_date = datetime.fromtimestamp(mod_time).strftime("%B %d, %Y")
-
     return {
         "slug": slug,
         "title": title,
-        "h1": h1,
         "description": description,
         "category": category,
         "cat_color": cat_color,
         "pub_date": pub_date,
-        "mod_time": mod_time,
+        "sort_time": sort_time,
     }
 
 
@@ -97,22 +118,9 @@ def build_blog_index(posts: list) -> str:
 <title>Blog - Golden Coast Cash Offer | Southern California Home Seller Resources</title>
 <meta name="description" content="Expert guides for Southern California homeowners - how to sell fast, avoid foreclosure, handle inherited properties, divorce sales, and more.">
 <link rel="canonical" href="https://www.goldencoastcashoffer.com/blog/">
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QW7L1QHYFR"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){{dataLayer.push(arguments);}}
-  gtag('js', new Date());
-  gtag('config', 'G-QW7L1QHYFR');
-</script>
-<!-- Microsoft Clarity -->
-<script type="text/javascript">
-    (function(c,l,a,r,i,t,y){{
-        c[a]=c[a]||function(){{(c[a].q=c[a].q||[]).push(arguments)}};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    }})(window, document, "clarity", "script", "wmyw873b7e");
-</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','G-QW7L1QHYFR');</script>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){{c[a]=c[a]||function(){{(c[a].q=c[a].q||[]).push(arguments)}};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);}})(window,document,"clarity","script","wmyw873b7e");</script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{{box-sizing:border-box;margin:0;padding:0}}
@@ -151,7 +159,6 @@ footer a{{color:#f8d264;text-decoration:none}}
 </style>
 </head>
 <body>
-
 <nav class="site-nav">
   <a href="/" class="nav-logo">Golden Coast Cash Offer</a>
   <div class="nav-links">
@@ -161,7 +168,6 @@ footer a{{color:#f8d264;text-decoration:none}}
     <a href="/#offer" class="nav-cta">Get Cash Offer</a>
   </div>
 </nav>
-
 <div class="blog-hero">
   <div class="blog-hero-inner">
     <h1>🌊 SoCal Seller Resources</h1>
@@ -169,24 +175,20 @@ footer a{{color:#f8d264;text-decoration:none}}
     <div class="count">{total} Articles · Updated Regularly</div>
   </div>
 </div>
-
 <div class="blog-wrap">
   <div class="posts-grid">
 {post_cards}
   </div>
-
   <div class="cta-band">
     <h2>Ready to Sell Your SoCal Home?</h2>
     <p>Get a fair cash offer in 24 hours. No fees, no repairs, no commissions. Close in as few as 7 days.</p>
     <a href="/#offer">Get My Free Cash Offer 🌊</a>
   </div>
 </div>
-
 <footer>
   © {year} Golden Coast Cash Offer · <a href="/">goldencoastcashoffer.com</a> · 949-280-5139<br>
   Serving Orange County, San Diego, Los Angeles, Ventura County and all of Southern California
 </footer>
-
 </body>
 </html>"""
 
@@ -197,18 +199,16 @@ def main():
         print("No blog directory found.")
         return
 
-    # Get all post directories sorted by modified time (newest first)
-    post_dirs = sorted(
-        [d for d in blog_dir.iterdir() if d.is_dir() and (d / "index.html").exists()],
-        key=lambda d: (d / "index.html").stat().st_mtime,
-        reverse=True
-    )
+    post_dirs = [d for d in blog_dir.iterdir() if d.is_dir() and (d / "index.html").exists()]
 
     posts = []
     for post_dir in post_dirs:
         meta = get_post_meta(post_dir)
         if meta:
             posts.append(meta)
+
+    # Sort by actual publish date, newest first
+    posts.sort(key=lambda x: x['sort_time'], reverse=True)
 
     print(f"Found {len(posts)} blog posts")
 
