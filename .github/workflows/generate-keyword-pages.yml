@@ -1,0 +1,28 @@
+name: Generate Keyword Landing Pages
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-pages:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Generate keyword landing pages
+        run: python scripts/generate_keyword_pages.py
+      - name: Commit and push
+        run: |
+          git config --global user.name "Coastal Cash Offer Bot"
+          git config --global user.email "bot@coastalcashoffer.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "Auto: Generate SoCal keyword landing pages"
+          git fetch origin
+          git merge -X ours origin/main
+          git push --force-with-lease
