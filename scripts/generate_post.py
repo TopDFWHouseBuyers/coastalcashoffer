@@ -137,6 +137,29 @@ def get_next_topic():
     return {"title": title, "slug": slug, "keyword": keyword, "post_type": post_type, "extra_context": extra_context}
 
 
+def clean_json(text):
+    """Strip markdown fences and extract JSON object."""
+    text = re.sub(r'^```json\s*', '', text)
+    text = re.sub(r'\s*```$', '', text)
+    text = text.strip()
+    start = text.find('{')
+    end = text.rfind('}')
+    if start != -1 and end != -1:
+        text = text[start:end+1]
+    return text
+
+
+def repair_json(text):
+    """
+    Attempt to fix common JSON breakage caused by unescaped double quotes
+    inside HTML attribute values within the content_html field.
+    Replaces any double-quoted HTML attributes with single-quoted ones.
+    """
+    # Fix href="..." and similar HTML attributes inside the JSON string
+    text = re.sub(r'(?<=\s)(href|src|class|id|style|rel|target)="([^"]*)"', r"\1='\2'", text)
+    return text
+
+
 def generate_post(topic: dict) -> dict:
     client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
@@ -163,6 +186,7 @@ REQUIREMENTS:
 4. Include California-specific context - tenant laws, high home values, escrow process, property taxes
 5. Meta title under 60 characters
 6. Meta description under 160 characters
+7. CRITICAL: In content_html, use single quotes for ALL HTML attributes (e.g. href='/#offer' not href="/#offer"). This is required so the JSON stays valid.
 
 Return ONLY valid JSON (no markdown, no backticks):
 {{
@@ -170,7 +194,7 @@ Return ONLY valid JSON (no markdown, no backticks):
   "meta_description": "...",
   "h1": "...",
   "intro": "...(2-3 sentence intro)...",
-  "content_html": "...(HTML using only h2, h3, p, ul, ol, li tags)...",
+  "content_html": "...(HTML using only h2, h3, p, ul, ol, li, a tags — single quotes on all attributes)...",
   "word_count": 0,
   "secondary_keywords": ["...", "...", "..."]
 }}"""
@@ -181,7 +205,7 @@ Return ONLY valid JSON (no markdown, no backticks):
         try:
             message = client.messages.create(
                 model="claude-sonnet-4-5",
-                max_tokens=6000,
+                max_tokens=8000,
                 messages=[{"role": "user", "content": prompt_safe}]
             )
             break
@@ -194,28 +218,25 @@ Return ONLY valid JSON (no markdown, no backticks):
 
     raw = message.content[0].text.strip()
 
-    def clean_json(text):
-        text = re.sub(r'^```json\s*', '', text)
-        text = re.sub(r'\s*```$', '', text)
-        text = text.strip()
-        start = text.find('{')
-        end = text.rfind('}')
-        if start != -1 and end != -1:
-            text = text[start:end+1]
-        return text
-
     try:
         return json.loads(clean_json(raw))
     except json.JSONDecodeError:
-        print("JSON parse failed - retrying with shorter word count...")
-        prompt_short = prompt_safe.replace('1,200-1,500 words', '700-900 words')
-        message2 = client.messages.create(
-            model="claude-sonnet-4-5",
-            max_tokens=4000,
-            messages=[{"role": "user", "content": prompt_short}]
-        )
-        raw2 = message2.content[0].text.strip()
-        return json.loads(clean_json(raw2))
+        print("JSON parse failed - attempting repair...")
+        try:
+            return json.loads(repair_json(clean_json(raw)))
+        except json.JSONDecodeError:
+            print("Repair failed - retrying API with shorter word count...")
+            prompt_short = prompt_safe.replace('1,200-1,500 words', '700-900 words')
+            message2 = client.messages.create(
+                model="claude-sonnet-4-5",
+                max_tokens=6000,
+                messages=[{"role": "user", "content": prompt_short}]
+            )
+            raw2 = message2.content[0].text.strip()
+            try:
+                return json.loads(clean_json(raw2))
+            except json.JSONDecodeError:
+                return json.loads(repair_json(clean_json(raw2)))
 
 
 def build_html_page(post: dict, topic: dict) -> str:
