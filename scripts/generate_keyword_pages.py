@@ -616,12 +616,12 @@ footer a{{color:#f8d264;text-decoration:none}}
 
 
 def main():
-    output_base = Path("sell-my-house-fast")
-    output_base.mkdir(exist_ok=True)
+    output_base = Path(".")
+    
 
     generated = []
     for city in CITIES:
-        folder = output_base / f"{city['slug']}-ca"
+        folder = output_base / f"sell-my-house-fast-{city['slug']}-ca"
         folder.mkdir(exist_ok=True)
         html = build_page(city)
         out_file = folder / "index.html"
