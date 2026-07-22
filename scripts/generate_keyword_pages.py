@@ -1,309 +1,120 @@
 #!/usr/bin/env python3
 """
-Golden Coast Cash Offer - Keyword Landing Page Generator
-Generates /sell-my-house-fast-{city}-ca/ pages for SoCal cities
-Run once to generate all pages, then commit to repo
+Golden Coast Cash Offer - Keyword Landing Page Generator (Full City List)
+Generates /sell-my-house-fast-{city}-ca/ pages for all SoCal cities
+Run via GitHub Actions workflow dispatch
 """
 
 from pathlib import Path
 from datetime import datetime
 
-# City data: name, slug, zip codes, neighborhoods, county, market context
 CITIES = [
-    {
-        "name": "Irvine",
-        "slug": "irvine",
-        "zips": ["92602", "92603", "92604", "92606", "92612", "92614", "92617", "92618", "92620"],
-        "neighborhoods": ["Woodbridge", "Northwood", "Turtle Rock", "University Park", "Quail Hill", "Portola Springs", "Great Park"],
-        "county": "Orange County",
-        "context": "one of Southern California's most planned and desirable cities, known for top-rated schools, master-planned communities, and strong property values typically ranging from $900K to $2M+",
-        "specifics": "With Irvine's strict HOA communities, high-density condos near the Irvine Spectrum, and complex trust sales common in established neighborhoods like Turtle Rock, selling traditionally can involve lengthy timelines and strict HOA transfer requirements."
-    },
-    {
-        "name": "Newport Beach",
-        "slug": "newport-beach",
-        "zips": ["92657", "92660", "92661", "92662", "92663"],
-        "neighborhoods": ["Corona del Mar", "Newport Coast", "Balboa Island", "Lido Isle", "West Newport"],
-        "county": "Orange County",
-        "context": "one of California's most prestigious coastal communities, with median home prices often exceeding $3M and a market driven by luxury buyers and second-home investors",
-        "specifics": "Newport Beach properties often involve trust sales, divorce settlements on high-value assets, or landlords managing vacation rental compliance under new Newport Beach short-term rental ordinances."
-    },
-    {
-        "name": "Huntington Beach",
-        "slug": "huntington-beach",
-        "zips": ["92646", "92647", "92648", "92649"],
-        "neighborhoods": ["Downtown HB", "Seacliff", "Huntington Harbour", "Meadowlark", "South Huntington"],
-        "county": "Orange County",
-        "context": "Surf City USA — a highly desirable coastal community where home values range from $700K for inland properties to $3M+ for oceanfront homes",
-        "specifics": "Huntington Beach homeowners often deal with flood zone considerations, coastal commission requirements, and vacation rental regulations that complicate traditional listings."
-    },
-    {
-        "name": "Mission Viejo",
-        "slug": "mission-viejo",
-        "zips": ["92691", "92692"],
-        "neighborhoods": ["Lake Mission Viejo", "Aegean Hills", "Painted Trails", "Canyon Crest", "Melinda Heights"],
-        "county": "Orange County",
-        "context": "a master-planned community in South Orange County known for its lake, excellent schools, and stable home values typically ranging from $750K to $1.5M",
-        "specifics": "Mission Viejo's lake community HOA, strict architectural guidelines, and large share of long-term homeowners mean many sellers are dealing with estate sales, trust transfers, or major deferred maintenance after decades of ownership."
-    },
-    {
-        "name": "Costa Mesa",
-        "slug": "costa-mesa",
-        "zips": ["92626", "92627", "92628"],
-        "neighborhoods": ["Eastside Costa Mesa", "Westside Costa Mesa", "Mesa Verde", "South Coast Metro", "College Park"],
-        "county": "Orange County",
-        "context": "a dynamic Orange County city adjacent to Newport Beach, with home values ranging from $800K to $2M+ depending on proximity to the coast",
-        "specifics": "Costa Mesa's mix of older mid-century homes needing updates, condo complexes with HOA issues, and landlords navigating California tenant protections makes cash sales a frequent solution."
-    },
-    {
-        "name": "Laguna Niguel",
-        "slug": "laguna-niguel",
-        "zips": ["92677"],
-        "neighborhoods": ["Bear Brand Ranch", "Laguna Sur", "Marina Hills", "Monarch Beach", "Pacific Island"],
-        "county": "Orange County",
-        "context": "an upscale South OC community bordering the coast, with median home prices around $1.2M and strong demand from buyers seeking Laguna Beach proximity without the price tag",
-        "specifics": "Laguna Niguel's hillside communities, gated enclaves, and prevalence of HOA-governed developments mean sellers often face transfer delays, special assessments, and disclosure requirements that slow traditional sales."
-    },
-    {
-        "name": "Aliso Viejo",
-        "slug": "aliso-viejo",
-        "zips": ["92656"],
-        "neighborhoods": ["Glenwood", "Pacific Ridge", "Vantis", "Aliso Ranch", "Canyon Vistas"],
-        "county": "Orange County",
-        "context": "a planned community in South Orange County with home values typically ranging from $700K to $1.3M, popular with families and young professionals",
-        "specifics": "Aliso Viejo's heavily HOA-governed communities and large condo market mean sellers frequently face special assessments, rental restrictions, and mandatory disclosure packets that extend traditional closing timelines."
-    },
-    {
-        "name": "Lake Forest",
-        "slug": "lake-forest",
-        "zips": ["92630", "92679"],
-        "neighborhoods": ["Foothill Ranch", "Baker Ranch", "Serrano", "Sun and Sail", "Portola Hills"],
-        "county": "Orange County",
-        "context": "a growing South OC community with home values from $750K to $1.5M, known for newer master-planned neighborhoods and easy Toll Road access",
-        "specifics": "Lake Forest's mix of resale HOA communities and newer construction means sellers dealing with inherited properties, divorce, or relocation often find cash sales the fastest path to closing."
-    },
-    {
-        "name": "Laguna Hills",
-        "slug": "laguna-hills",
-        "zips": ["92653", "92654"],
-        "neighborhoods": ["Moulton Ranch", "Laguna Hills Estates", "Nellie Gail Ranch", "Creekside", "Village Walk"],
-        "county": "Orange County",
-        "context": "a quiet South OC city with home values from $700K to $2M+, anchored by established residential neighborhoods and easy freeway access",
-        "specifics": "Laguna Hills has a high percentage of long-term homeowners, meaning many properties coming to market involve estate sales, trust administration, or deferred maintenance on older homes."
-    },
-    {
-        "name": "San Clemente",
-        "slug": "san-clemente",
-        "zips": ["92672", "92673"],
-        "neighborhoods": ["Southeast San Clemente", "Talega", "Las Palmas", "Southwest San Clemente", "Northwest San Clemente"],
-        "county": "Orange County",
-        "context": "a coastal surf town at the southern tip of Orange County with median home prices around $1.1M, popular for its Spanish Colonial architecture and beach lifestyle",
-        "specifics": "San Clemente homeowners often deal with hillside properties requiring coastal commission disclosure, older homes with deferred maintenance, or vacation rental compliance issues."
-    },
-    {
-        "name": "Dana Point",
-        "slug": "dana-point",
-        "zips": ["92624", "92629"],
-        "neighborhoods": ["Lantern District", "Monarch Beach", "Capistrano Beach", "Dana Hills", "Strand at Headlands"],
-        "county": "Orange County",
-        "context": "a charming harbor city at the southern end of Orange County with home values from $800K to $4M+ for oceanfront properties",
-        "specifics": "Dana Point's coastal location means sellers frequently navigate California Coastal Commission requirements, short-term rental ordinance compliance, and high property tax carry costs that make cash sales attractive."
-    },
-    {
-        "name": "San Juan Capistrano",
-        "slug": "san-juan-capistrano",
-        "zips": ["92675"],
-        "neighborhoods": ["Mission Hills", "Rancho Madrina", "Ortega Ranch", "Marbella", "Shangri-La"],
-        "county": "Orange County",
-        "context": "a historic city known for the Mission and equestrian estates, with home values ranging from $700K for standard homes to $5M+ for horse properties",
-        "specifics": "San Juan Capistrano's equestrian zoning, historic district regulations, and large share of estate properties create complexities that often make cash sales the most practical option for sellers."
-    },
-    {
-        "name": "Carlsbad",
-        "slug": "carlsbad",
-        "zips": ["92008", "92009", "92010", "92011"],
-        "neighborhoods": ["La Costa", "Aviara", "Bressi Ranch", "Calavera Hills", "Village by the Sea"],
-        "county": "San Diego County",
-        "context": "one of San Diego County's most desirable coastal cities with median home prices around $1.3M, known for Legoland, world-class golf, and pristine beaches",
-        "specifics": "Carlsbad's mix of coastal estates, master-planned inland communities, and vacation-rental properties means sellers often face HOA complexities, coastal permit requirements, or tenant transition issues."
-    },
-    {
-        "name": "Encinitas",
-        "slug": "encinitas",
-        "zips": ["92024"],
-        "neighborhoods": ["Leucadia", "Cardiff-by-the-Sea", "Olivenhain", "New Encinitas", "Old Encinitas"],
-        "county": "San Diego County",
-        "context": "a beloved North San Diego County beach community with home values typically ranging from $1M to $4M+, known for its surf culture and coastal lifestyle",
-        "specifics": "Encinitas sellers frequently encounter coastal bluff setback requirements, short-term rental compliance issues, and high carrying costs that make a quick cash sale attractive over a drawn-out listing process."
-    },
-    {
-        "name": "Temecula",
-        "slug": "temecula",
-        "zips": ["92590", "92591", "92592"],
-        "neighborhoods": ["Wine Country", "Redhawk", "Paloma del Sol", "Harveston", "Old Town Temecula"],
-        "county": "Riverside County",
-        "context": "the Inland Empire's wine country city with home values from $500K to $1.5M+, popular for its wineries, master-planned communities, and relative affordability compared to coastal OC",
-        "specifics": "Temecula's large share of HOA-governed communities, vacation rental properties near the wineries, and a significant retiree population mean estate sales and downsizing are common motivators for a quick cash sale."
-    },
-    {
-        "name": "Murrieta",
-        "slug": "murrieta",
-        "zips": ["92562", "92563"],
-        "neighborhoods": ["Central Murrieta", "West Murrieta", "Greer Ranch", "Spencer's Crossing", "Copper Canyon"],
-        "county": "Riverside County",
-        "context": "a fast-growing Inland Empire city with home values from $450K to $900K, offering more space and affordability than coastal communities while still accessible to OC and San Diego",
-        "specifics": "Murrieta's rapid growth means many homeowners are investors with multiple properties, landlords managing tenant transitions, or families relocating for work who need to close quickly."
-    },
-    {
-        "name": "Riverside",
-        "slug": "riverside",
-        "zips": ["92501", "92503", "92504", "92505", "92506", "92507", "92508"],
-        "neighborhoods": ["Wood Streets", "Alessandro Heights", "Canyon Crest", "Orangecrest", "La Sierra"],
-        "county": "Riverside County",
-        "context": "the Inland Empire's largest city with home values from $400K to $900K, offering diverse neighborhoods from historic districts to newer suburban developments",
-        "specifics": "Riverside's older housing stock, large rental investor market, and significant share of distressed properties mean cash buyers are a common and practical solution for sellers facing repairs, tenant issues, or financial hardship."
-    },
-    {
-        "name": "Corona",
-        "slug": "corona",
-        "zips": ["92879", "92880", "92881", "92882", "92883"],
-        "neighborhoods": ["South Corona", "Sierra del Oro", "Chase Ranch", "Horsethief Canyon", "El Cerrito"],
-        "county": "Riverside County",
-        "context": "a growing Inland Empire city at the gateway to Orange County with home values from $550K to $950K, popular for its relative affordability and freeway access",
-        "specifics": "Corona's position between OC and the IE attracts both investors and primary homeowners. Many sellers are landlords or homeowners facing major repairs on older properties who prefer a fast cash sale over a costly renovation."
-    },
-    {
-        "name": "Oceanside",
-        "slug": "oceanside",
-        "zips": ["92054", "92056", "92057", "92058"],
-        "neighborhoods": ["Downtown Oceanside", "Fire Mountain", "South Oceanside", "Rancho del Oro", "Jeffries Ranch"],
-        "county": "San Diego County",
-        "context": "North San Diego County's largest city with home values from $600K to $1.5M+, offering coastal living at more accessible prices than neighboring Carlsbad and Encinitas",
-        "specifics": "Oceanside's large military community (adjacent to Camp Pendleton) means many sellers are PCS-ing on short notice and need a fast, guaranteed close without the uncertainty of a traditional listing."
-    },
-    {
-        "name": "Escondido",
-        "slug": "escondido",
-        "zips": ["92025", "92026", "92027", "92029"],
-        "neighborhoods": ["Hidden Meadows", "Felicita", "Valley Center adjacent", "Central Escondido", "East Escondido"],
-        "county": "San Diego County",
-        "context": "an inland San Diego County city with home values from $550K to $900K, offering larger lots and more affordability than coastal communities",
-        "specifics": "Escondido's older housing stock, large share of rental properties, and diverse seller situations — from inherited homes to landlords exiting the market — make cash sales a frequent and practical choice."
-    },
-    {
-        "name": "San Diego",
-        "slug": "san-diego",
-        "zips": ["92101", "92103", "92104", "92105", "92108", "92115", "92116", "92117", "92120", "92123"],
-        "neighborhoods": ["North Park", "Hillcrest", "Mission Valley", "San Carlos", "Kensington", "Linda Vista", "Clairemont"],
-        "county": "San Diego County",
-        "context": "California's second-largest city with home values ranging widely from $650K to $3M+ depending on neighborhood and proximity to the coast",
-        "specifics": "San Diego's diverse neighborhoods, large military and biotech employer base, and significant rental market mean sellers come from every situation — relocation, divorce, inherited property, tired landlord — and often need the speed and certainty of a cash sale."
-    },
-    {
-        "name": "Chula Vista",
-        "slug": "chula-vista",
-        "zips": ["91910", "91911", "91913", "91914", "91915"],
-        "neighborhoods": ["Eastlake", "Otay Ranch", "Rancho del Rey", "Bonita adjacent", "Downtown Chula Vista"],
-        "county": "San Diego County",
-        "context": "San Diego's second-largest city with home values from $600K to $900K, featuring master-planned communities in the east and established neighborhoods in the west",
-        "specifics": "Chula Vista's rapid eastern growth has created a large HOA-governed community market. Sellers dealing with special assessments, Mello-Roos tax complications, or tenant-occupied investment properties often find cash sales the simplest path forward."
-    },
-    {
-        "name": "Los Angeles",
-        "slug": "los-angeles",
-        "zips": ["90001", "90011", "90018", "90019", "90025", "90034", "90043", "90047", "90062", "90068"],
-        "neighborhoods": ["Mid-City", "West Adams", "Palms", "Mar Vista", "Highland Park", "Eagle Rock", "Leimert Park"],
-        "county": "Los Angeles County",
-        "context": "the nation's second-largest city with home values ranging from $600K in outlying areas to $5M+ in prime westside neighborhoods, with an extraordinarily diverse seller market",
-        "specifics": "Los Angeles sellers face some of California's most complex tenant protections under the LA Rent Stabilization Ordinance (RSO), strict disclosure requirements, and frequent probate and trust sales. Cash buyers who understand LA-specific regulations provide the fastest, cleanest path to closing."
-    },
-    {
-        "name": "Long Beach",
-        "slug": "long-beach",
-        "zips": ["90802", "90803", "90804", "90805", "90806", "90807", "90808"],
-        "neighborhoods": ["Belmont Shore", "Naples", "Bixby Knolls", "Signal Hill adjacent", "Los Altos", "Wrigley"],
-        "county": "Los Angeles County",
-        "context": "a diverse coastal city with home values from $550K to $2M+ on the waterfront, offering more affordability than neighboring beach communities while maintaining coastal access",
-        "specifics": "Long Beach has its own rent control ordinance and significant multi-unit inventory. Landlords dealing with rent-controlled tenants, sellers managing older craftsman homes, and estate executors frequently choose cash buyers to avoid the complexity of a traditional sale."
-    },
-    {
-        "name": "Torrance",
-        "slug": "torrance",
-        "zips": ["90501", "90502", "90503", "90504", "90505"],
-        "neighborhoods": ["Old Torrance", "Hollywood Riviera", "South Bay Galleria area", "West Torrance", "North Torrance"],
-        "county": "Los Angeles County",
-        "context": "a well-established South Bay city with home values from $750K to $2M+, known for its excellent schools, walkable downtown, and proximity to the beach",
-        "specifics": "Torrance's stable, owner-occupied neighborhoods have a high share of long-term homeowners, meaning many properties coming to market involve estate sales, significant deferred maintenance, or trust transfers that benefit from the speed of a cash sale."
-    },
-    {
-        "name": "Thousand Oaks",
-        "slug": "thousand-oaks",
-        "zips": ["91320", "91360", "91361", "91362"],
-        "neighborhoods": ["Newbury Park", "Lynn Ranch", "Conejo Valley", "Wildwood", "Lang Ranch"],
-        "county": "Ventura County",
-        "context": "one of Ventura County's most desirable cities with home values from $800K to $2M+, consistently ranked among the safest cities in the nation",
-        "specifics": "Thousand Oaks sellers often include long-term homeowners downsizing from large family homes, estate executors managing trust sales, and landlords navigating California tenant protections in a strong rental market."
-    },
-    {
-        "name": "Oxnard",
-        "slug": "oxnard",
-        "zips": ["93030", "93033", "93035", "93036"],
-        "neighborhoods": ["Oxnard Shores", "Silver Strand", "Riverpark", "South Oxnard", "Northbank"],
-        "county": "Ventura County",
-        "context": "Ventura County's largest city with home values from $550K to $1.5M+ for beachfront properties, offering coastal access at more affordable prices than Orange County",
-        "specifics": "Oxnard's diverse housing stock — from beachfront condos to agricultural-adjacent properties — and strong rental market mean sellers frequently deal with tenant situations, deferred maintenance, or inherited properties."
-    },
-    {
-        "name": "Ventura",
-        "slug": "ventura",
-        "zips": ["93001", "93003", "93004"],
-        "neighborhoods": ["Midtown", "Downtown Ventura", "Pierpont", "East Ventura", "Ondulando"],
-        "county": "Ventura County",
-        "context": "a classic California coastal city with home values from $600K to $1.5M+, known for its surf, farmers market, and relaxed beach town atmosphere",
-        "specifics": "Ventura's older housing stock, active vacation rental market, and significant share of inherited coastal properties mean sellers frequently need a buyer who can close without requiring costly repairs or renovations."
-    },
-    {
-        "name": "Rancho Cucamonga",
-        "slug": "rancho-cucamonga",
-        "zips": ["91701", "91730", "91737", "91739"],
-        "neighborhoods": ["Etiwanda", "Alta Loma", "Victoria", "Northtown", "Haven View Estates"],
-        "county": "San Bernardino County",
-        "context": "one of the Inland Empire's most desirable cities with home values from $550K to $1.2M, known for its planned communities, mountain views, and growing job market",
-        "specifics": "Rancho Cucamonga's large HOA community base and strong rental market mean sellers often deal with special assessments, investor exits, or families relocating for work who need a guaranteed fast close."
-    },
-    {
-        "name": "Anaheim",
-        "slug": "anaheim",
-        "zips": ["92801", "92802", "92804", "92805", "92806", "92807", "92808"],
-        "neighborhoods": ["Anaheim Hills", "Platinum Triangle", "Colony Historic District", "West Anaheim", "East Anaheim"],
-        "county": "Orange County",
-        "context": "Orange County's largest city with home values from $600K to $1.5M+ in Anaheim Hills, known for Disneyland, Angel Stadium, and a diverse mix of residential neighborhoods",
-        "specifics": "Anaheim's large vacation rental market near Disneyland, significant older housing inventory in West Anaheim, and diverse seller situations make cash buyers an attractive option for homeowners who want to avoid costly updates before listing."
-    },
-    {
-        "name": "Santa Ana",
-        "slug": "santa-ana",
-        "zips": ["92701", "92703", "92704", "92705", "92706", "92707"],
-        "neighborhoods": ["Floral Park", "Park Santiago", "Downtown Santa Ana", "South Coast Metro adjacent", "Lacy"],
-        "county": "Orange County",
-        "context": "Orange County's second-largest city with home values from $550K to $1.2M, featuring a mix of historic neighborhoods and urban development near the civic center",
-        "specifics": "Santa Ana has a high concentration of older homes, a significant rental market, and many multi-generational family properties. Sellers dealing with inherited homes, deferred maintenance, or tenant situations frequently choose cash buyers."
-    },
-    {
-        "name": "Fullerton",
-        "slug": "fullerton",
-        "zips": ["92831", "92832", "92833", "92835"],
-        "neighborhoods": ["Downtown Fullerton", "Sunny Hills", "Amerige Heights", "Raymond Hills", "Richman"],
-        "county": "Orange County",
-        "context": "a college town and established Orange County community with home values from $650K to $1.5M, known for its tree-lined streets, historic downtown, and Cal State Fullerton",
-        "specifics": "Fullerton's large student rental market, older craftsman homes near downtown, and active investor community mean sellers often deal with tenant situations, significant deferred maintenance, or multi-unit properties that benefit from cash sales."
-    },
+    # Ventura County
+    {"name":"Ventura","slug":"ventura","zips":["93001","93003","93004"],"neighborhoods":["Midtown","Downtown Ventura","Pierpont","East Ventura","Ondulando"],"county":"Ventura County","context":"a classic California coastal city with home values from $600K to $1.5M+, known for its surf, farmers market, and relaxed beach town atmosphere","specifics":"Ventura's older housing stock, active vacation rental market, and significant share of inherited coastal properties mean sellers frequently need a buyer who can close without requiring costly repairs or renovations."},
+    {"name":"Oxnard","slug":"oxnard","zips":["93030","93033","93035","93036"],"neighborhoods":["Oxnard Shores","Silver Strand","Riverpark","South Oxnard","Northbank"],"county":"Ventura County","context":"Ventura County's largest city with home values from $550K to $1.5M+ for beachfront properties, offering coastal access at more affordable prices than Orange County","specifics":"Oxnard's diverse housing stock and strong rental market mean sellers frequently deal with tenant situations, deferred maintenance, or inherited properties."},
+    {"name":"Camarillo","slug":"camarillo","zips":["93010","93012"],"neighborhoods":["Old Town Camarillo","Mission Oaks","Sterling Hills","Springville","Las Posas Estates"],"county":"Ventura County","context":"a desirable Ventura County city with home values from $650K to $1.3M, known for its outlet mall, mild climate, and proximity to both LA and Santa Barbara","specifics":"Camarillo's large retiree population and many long-term homeowners mean estate sales, trust transfers, and downsizing are common motivators for a quick cash sale."},
+    {"name":"Thousand Oaks","slug":"thousand-oaks","zips":["91320","91360","91361","91362"],"neighborhoods":["Newbury Park","Lynn Ranch","Conejo Valley","Wildwood","Lang Ranch"],"county":"Ventura County","context":"one of Ventura County's most desirable cities with home values from $800K to $2M+, consistently ranked among the safest cities in the nation","specifics":"Thousand Oaks sellers often include long-term homeowners downsizing from large family homes, estate executors managing trust sales, and landlords navigating California tenant protections."},
+    {"name":"Simi Valley","slug":"simi-valley","zips":["93063","93065"],"neighborhoods":["Wood Ranch","Bridle Path","Indian Hills","Berylwood","Mountain Gate"],"county":"Ventura County","context":"a family-friendly Ventura County city with home values from $600K to $1.1M, popular for its safe neighborhoods, good schools, and relative affordability","specifics":"Simi Valley's large share of single-family homes and many long-term residents mean sellers often deal with deferred maintenance on older properties or estates that benefit from a straightforward cash sale."},
+    {"name":"Ojai","slug":"ojai","zips":["93023"],"neighborhoods":["Downtown Ojai","East End","West Ojai","Upper Ojai","Meiners Oaks"],"county":"Ventura County","context":"a charming arts community in the Ojai Valley with home values from $700K to $2M+, known for its boutique hotels, wellness retreats, and scenic mountain setting","specifics":"Ojai's mix of historic properties, vacation rentals, and estate homes means sellers frequently deal with complex ownership situations or trust sales requiring a quick, clean close."},
+    # Los Angeles County
+    {"name":"Los Angeles","slug":"los-angeles","zips":["90001","90011","90018","90019","90025","90034","90043","90047","90062","90068"],"neighborhoods":["Mid-City","West Adams","Palms","Mar Vista","Highland Park","Eagle Rock","Leimert Park"],"county":"Los Angeles County","context":"the nation's second-largest city with home values ranging from $600K in outlying areas to $5M+ in prime westside neighborhoods","specifics":"Los Angeles sellers face some of California's most complex tenant protections under the LA Rent Stabilization Ordinance (RSO), strict disclosure requirements, and frequent probate and trust sales."},
+    {"name":"Long Beach","slug":"long-beach","zips":["90802","90803","90804","90805","90806","90807","90808"],"neighborhoods":["Belmont Shore","Naples","Bixby Knolls","Los Altos","Wrigley"],"county":"Los Angeles County","context":"a diverse coastal city with home values from $550K to $2M+ on the waterfront, offering more affordability than neighboring beach communities","specifics":"Long Beach has its own rent control ordinance and significant multi-unit inventory. Landlords dealing with rent-controlled tenants and estate executors frequently choose cash buyers."},
+    {"name":"Santa Monica","slug":"santa-monica","zips":["90401","90402","90403","90404","90405"],"neighborhoods":["Ocean Park","Sunset Park","North of Montana","Mid-City Santa Monica","Downtown Santa Monica"],"county":"Los Angeles County","context":"one of Southern California's most iconic beach cities with median home prices over $2M, known for the pier, Third Street Promenade, and strong tech industry presence","specifics":"Santa Monica has strict rent control under the Santa Monica Rent Control Charter, making landlord exits complex. Trust sales, probate, and high-value divorce settlements are also common."},
+    {"name":"Pasadena","slug":"pasadena","zips":["91101","91103","91104","91105","91106","91107"],"neighborhoods":["Old Pasadena","Bungalow Heaven","San Rafael Hills","Caltech area","South Pasadena adjacent"],"county":"Los Angeles County","context":"a historic city known for the Rose Bowl and Rose Parade, with home values from $800K to $3M+ in the most desirable historic neighborhoods","specifics":"Pasadena's wealth of historic craftsman homes, significant estate sales, and active trust and probate market make cash buyers a frequent solution for sellers who don't want costly renovation requirements."},
+    {"name":"Torrance","slug":"torrance","zips":["90501","90502","90503","90504","90505"],"neighborhoods":["Old Torrance","Hollywood Riviera","West Torrance","North Torrance","South Torrance"],"county":"Los Angeles County","context":"a well-established South Bay city with home values from $750K to $2M+, known for its excellent schools and proximity to the beach","specifics":"Torrance's stable owner-occupied neighborhoods have a high share of long-term homeowners, meaning many properties involve estate sales, significant deferred maintenance, or trust transfers."},
+    {"name":"Malibu","slug":"malibu","zips":["90265"],"neighborhoods":["Malibu Colony","Point Dume","Broad Beach","Las Virgenes","Malibu Park"],"county":"Los Angeles County","context":"one of California's most prestigious coastal communities with median home prices over $3.5M, known for celebrity residents and dramatic ocean views","specifics":"Malibu properties frequently involve coastal commission permits, fire zone insurance complications, and high-value trust or estate sales where speed and discretion are paramount."},
+    {"name":"Beverly Hills","slug":"beverly-hills","zips":["90210","90211","90212"],"neighborhoods":["Flats","Beverly Hills Post Office","Trousdale Estates","Benedict Canyon","Coldwater Canyon"],"county":"Los Angeles County","context":"one of the world's most recognized luxury real estate markets with median home prices over $3M, driven by international buyers and estate sales","specifics":"Beverly Hills transactions frequently involve trust and estate sales, divorce settlements on high-value assets, and sellers who need absolute discretion and a guaranteed close without public listings."},
+    {"name":"Glendale","slug":"glendale","zips":["91201","91202","91203","91204","91205","91206","91207","91208"],"neighborhoods":["Montrose","La Crescenta adjacent","Adams Hill","Verdugo Woodlands","Chevy Chase Canyon"],"county":"Los Angeles County","context":"a diverse LA-adjacent city with home values from $700K to $1.8M, known for its Armenian community, Brand Boulevard retail corridor, and Verdugo Mountains backdrop","specifics":"Glendale's older housing inventory and large multi-generational ownership patterns mean many properties involve complex family ownership, deferred maintenance, or probate situations."},
+    {"name":"Burbank","slug":"burbank","zips":["91501","91502","91504","91505","91506"],"neighborhoods":["Magnolia Park","Downtown Burbank","Rancho","Starlight Hills","East Burbank"],"county":"Los Angeles County","context":"the media capital of the world with home values from $700K to $1.5M, home to Warner Bros, Disney, and NBCUniversal studio facilities","specifics":"Burbank's entertainment industry workforce creates frequent relocation needs. The city also has significant older craftsman inventory and an active rental market where landlords often seek clean exits."},
+    {"name":"Pomona","slug":"pomona","zips":["91766","91767","91768"],"neighborhoods":["Lincoln Park","Garey","Village at Indian Hill","Downtown Pomona","Phillips Ranch adjacent"],"county":"Los Angeles County","context":"an Inland Empire gateway city with home values from $450K to $750K, offering more affordability than coastal LA while maintaining freeway access","specifics":"Pomona's older housing stock, active investor market, and significant rental inventory mean cash buyers are a common solution for sellers facing repairs, tenant situations, or financial hardship."},
+    {"name":"Whittier","slug":"whittier","zips":["90601","90602","90603","90604","90605"],"neighborhoods":["Uptown Whittier","Penn Hills","South Whittier","East Whittier","Mar Vista"],"county":"Los Angeles County","context":"a historic LA County city with home values from $550K to $1M, known for its walkable uptown district and Richard Nixon Presidential Library","specifics":"Whittier's many older homes, active estate sale market, and significant landlord investor base mean cash buyers frequently provide the fastest and simplest solution for sellers."},
+    {"name":"Downey","slug":"downey","zips":["90240","90241","90242"],"neighborhoods":["North Downey","South Downey","Downtown Downey","Brookshire","Manzanar"],"county":"Los Angeles County","context":"a Southeast LA city with home values from $550K to $900K, known for its historic connection to NASA's space program","specifics":"Downey's mix of older single-family homes and strong rental demand creates frequent opportunities for cash sales among landlords exiting the market or heirs managing inherited properties."},
+    {"name":"Compton","slug":"compton","zips":["90220","90221","90222"],"neighborhoods":["Sunny Cove","Leland","Richland Farms","Downtown Compton","North Compton"],"county":"Los Angeles County","context":"an LA County city with home values from $400K to $650K undergoing significant investment and appreciation, offering entry-level pricing in the greater LA market","specifics":"Compton's evolving market, older housing inventory, and high share of long-term homeowners mean many sellers deal with significant deferred maintenance or estate situations where a cash sale is most practical."},
+    {"name":"Inglewood","slug":"inglewood","zips":["90301","90302","90303","90304","90305"],"neighborhoods":["Morningside Park","Ladera Heights adjacent","Downtown Inglewood","Arbor Village","Centinela"],"county":"Los Angeles County","context":"a rapidly appreciating LA city with home values from $600K to $1M+, transformed by SoFi Stadium and the growing entertainment district","specifics":"Inglewood's rapid appreciation has prompted many long-term homeowners and landlords to sell. The city's rent stabilization ordinance makes tenant situations complex, making cash buyers an attractive exit for landlords."},
+    {"name":"Hawthorne","slug":"hawthorne","zips":["90250"],"neighborhoods":["Bodger Park","Holly Glen","Hollyglen","Del Aire","Ramona"],"county":"Los Angeles County","context":"a South Bay city with home values from $550K to $900K, home to SpaceX headquarters and experiencing renewed investment interest","specifics":"Hawthorne's proximity to LAX and the tech corridor drives frequent relocation sales. Older homes on larger lots also create opportunities for investors and sellers wanting to avoid renovation costs."},
+    {"name":"Gardena","slug":"gardena","zips":["90247","90248","90249"],"neighborhoods":["North Gardena","South Gardena","Moneta","Downtown Gardena","Normandale"],"county":"Los Angeles County","context":"a South Bay city with home values from $550K to $850K known for its strong Japanese-American community and central location between LA and the beach cities","specifics":"Gardena has significant older housing inventory and many long-term owners, making estate sales and deferred maintenance common factors when homeowners choose to sell quickly for cash."},
+    {"name":"Carson","slug":"carson","zips":["90745","90746","90747"],"neighborhoods":["South Carson","North Carson","Dominguez","Cal State Dominguez Hills area","Victoria"],"county":"Los Angeles County","context":"a South Bay city with home values from $550K to $850K, known for its diverse community and proximity to the ports of LA and Long Beach","specifics":"Carson's industrial and port-adjacent location attracts investor buyers. Sellers dealing with older properties, tenant situations, or relocation frequently find cash buyers the most straightforward solution."},
+    {"name":"El Segundo","slug":"el-segundo","zips":["90245"],"neighborhoods":["Downtown El Segundo","North El Segundo","South El Segundo","Smoky Hollow","Imperial Avenue"],"county":"Los Angeles County","context":"a small but desirable South Bay city with home values from $1M to $2M+, popular with aerospace and tech professionals for its walkability and beach proximity","specifics":"El Segundo's tight housing inventory and high demand mean sellers can move quickly. Estate sales and relocation are the primary drivers for cash sales in this premium small-city market."},
+    {"name":"Manhattan Beach","slug":"manhattan-beach","zips":["90266"],"neighborhoods":["Sand Section","Tree Section","Hill Section","East Manhattan Beach","Manhattan Village"],"county":"Los Angeles County","context":"one of LA's most prestigious beach cities with median home prices over $3M, known for the Strand, volleyball culture, and Silicon Beach proximity","specifics":"Manhattan Beach's ultra-premium market sees estate sales, trust transfers, and divorce settlements on high-value assets where sellers prioritize speed and certainty over maximizing list price."},
+    {"name":"Hermosa Beach","slug":"hermosa-beach","zips":["90254"],"neighborhoods":["Downtown Hermosa","East Hermosa","Hermosa Valley","Strand adjacent","North Hermosa"],"county":"Los Angeles County","context":"a small beach city with home values from $1.5M to $4M+, known for its vibrant pier plaza, beach volleyball, and walkable downtown","specifics":"Hermosa Beach's tight lot sizes, frequent vacation rental activity, and high property values mean sellers often deal with complex ownership situations or need fast closes tied to purchase contingencies."},
+    {"name":"Redondo Beach","slug":"redondo-beach","zips":["90277","90278"],"neighborhoods":["North Redondo","South Redondo","Hollywood Riviera","Riviera Village","Golden Hills"],"county":"Los Angeles County","context":"a popular South Bay beach city with home values from $900K to $2.5M, offering a relaxed coastal lifestyle with easy access to LAX and South Bay employment","specifics":"Redondo Beach sellers frequently include landlords exiting the rental market, downsizing long-term homeowners, and estate executors in a market where condition and timing matter significantly."},
+    {"name":"Lakewood","slug":"lakewood","zips":["90712","90713","90714","90715"],"neighborhoods":["East Lakewood","West Lakewood","Lakewood Village","Lakewood Park","Del Valle"],"county":"Los Angeles County","context":"one of America's first planned suburban cities with home values from $600K to $900K, featuring uniform mid-century tract homes popular with first-time buyers and investors","specifics":"Lakewood's consistent mid-century housing stock and active investor market make it a frequent target for cash buyers. Estate sales and landlord exits are the most common seller situations."},
+    {"name":"Cerritos","slug":"cerritos","zips":["90703"],"neighborhoods":["North Cerritos","South Cerritos","College Park","Cerritos Towne Center area","Bloomfield"],"county":"Los Angeles County","context":"a planned community with top-rated schools and home values from $700K to $1.2M, popular with Asian-American families for its educational reputation","specifics":"Cerritos's long-term owner-occupied nature means many properties coming to market are estate sales or involve significant deferred maintenance after decades of ownership by the same family."},
+    {"name":"Norwalk","slug":"norwalk","zips":["90650"],"neighborhoods":["Studebaker","Imperial","Norwalk Square","East Norwalk","Downtown Norwalk"],"county":"Los Angeles County","context":"an established Southeast LA city with home values from $500K to $750K, offering affordability and central location near multiple freeways","specifics":"Norwalk's older housing stock and active rental market create frequent opportunities for cash sales among landlords, heirs managing inherited properties, or sellers facing significant repair needs."},
+    {"name":"Bellflower","slug":"bellflower","zips":["90706"],"neighborhoods":["North Bellflower","South Bellflower","Downtown Bellflower","Somerset","Ramona"],"county":"Los Angeles County","context":"a Southeast LA city with home values from $550K to $800K, offering working-class affordability and proximity to Long Beach and the 91 freeway corridor","specifics":"Bellflower's investor-friendly market and older housing inventory make cash sales a common and practical solution for sellers dealing with repairs, tenant situations, or estate transfers."},
+    {"name":"Paramount","slug":"paramount","zips":["90723"],"neighborhoods":["North Paramount","South Paramount","Downtown Paramount","Clearwater","Hollydale"],"county":"Los Angeles County","context":"a Southeast LA city with home values from $480K to $700K, one of the more affordable markets in LA County with strong rental demand","specifics":"Paramount's affordable price point attracts investors and first-time buyers. Sellers dealing with deferred maintenance, tenant situations, or financial hardship frequently benefit from a fast cash offer."},
+    {"name":"El Monte","slug":"el-monte","zips":["91731","91732","91733"],"neighborhoods":["North El Monte","South El Monte","Downtown El Monte","Mountain View","Potrero Heights"],"county":"Los Angeles County","context":"a San Gabriel Valley city with home values from $500K to $800K, one of the most densely populated cities in the San Gabriel Valley","specifics":"El Monte's older housing stock, large rental market, and active investor base make cash sales a frequent solution for sellers dealing with deferred maintenance, tenant complications, or inherited properties."},
+    {"name":"West Covina","slug":"west-covina","zips":["91790","91791","91792"],"neighborhoods":["South Hills","West Covina Hills","Downtown West Covina","Sunset","Merced"],"county":"Los Angeles County","context":"a San Gabriel Valley city with home values from $550K to $950K, known for its shopping centers and suburban family neighborhoods","specifics":"West Covina's mix of 1950s-1970s tract homes and newer developments means many sellers deal with deferred maintenance or estate situations where a cash sale avoids costly renovation."},
+    {"name":"Alhambra","slug":"alhambra","zips":["91801","91802","91803"],"neighborhoods":["North Alhambra","South Alhambra","Downtown Alhambra","Emery Park","Midwick Tract"],"county":"Los Angeles County","context":"a San Gabriel Valley city adjacent to Monterey Park with home values from $650K to $1.1M, known for its vibrant Asian food scene","specifics":"Alhambra has significant older craftsman and bungalow inventory alongside multi-unit properties. Estate sales, trust transfers, and landlord exits are common scenarios where cash buyers provide the cleanest solution."},
+    {"name":"Monterey Park","slug":"monterey-park","zips":["91754","91755"],"neighborhoods":["North Monterey Park","South Monterey Park","Barnes Park area","Midcrest","Sequoia"],"county":"Los Angeles County","context":"a San Gabriel Valley city known as the first suburban Chinatown with home values from $650K to $1.1M and a vibrant Asian-American community","specifics":"Monterey Park's multi-generational ownership patterns and significant estate sale market mean many properties involve complex family ownership situations where a straightforward cash sale is preferred."},
+    {"name":"Arcadia","slug":"arcadia","zips":["91006","91007"],"neighborhoods":["Upper Rancho","Baldwin Avenue area","Downtown Arcadia","Highlands","Santa Anita"],"county":"Los Angeles County","context":"a prestigious San Gabriel Valley city with home values from $900K to $3M+, known for Santa Anita Park, top schools, and strong demand from international buyers","specifics":"Arcadia's luxury market sees significant estate sales, trust transfers, and sellers who prioritize a clean, fast close over maximizing list price — especially common among the city's large international homeowner base."},
+    {"name":"Santa Clarita","slug":"santa-clarita","zips":["91350","91351","91354","91355","91381","91390"],"neighborhoods":["Valencia","Saugus","Canyon Country","Newhall","Stevenson Ranch"],"county":"Los Angeles County","context":"one of the fastest-growing cities in California with home values from $600K to $1.3M, popular with families for its master-planned communities and low crime","specifics":"Santa Clarita's HOA-heavy communities, significant Mello-Roos tax burden in newer developments, and active relocation market mean sellers frequently need a guaranteed fast close."},
+    # Orange County
+    {"name":"Irvine","slug":"irvine","zips":["92602","92603","92604","92606","92612","92614","92617","92618","92620"],"neighborhoods":["Woodbridge","Northwood","Turtle Rock","University Park","Quail Hill","Portola Springs","Great Park"],"county":"Orange County","context":"one of Southern California's most planned and desirable cities with home values typically ranging from $900K to $2M+, known for top-rated schools and master-planned communities","specifics":"Irvine's strict HOA communities, high-density condos near the Irvine Spectrum, and complex trust sales common in established neighborhoods like Turtle Rock mean traditional listings often involve lengthy HOA transfer requirements."},
+    {"name":"Anaheim","slug":"anaheim","zips":["92801","92802","92804","92805","92806","92807","92808"],"neighborhoods":["Anaheim Hills","Platinum Triangle","Colony Historic District","West Anaheim","East Anaheim"],"county":"Orange County","context":"Orange County's largest city with home values from $600K to $1.5M+ in Anaheim Hills, known for Disneyland, Angel Stadium, and a diverse mix of residential neighborhoods","specifics":"Anaheim's large vacation rental market near Disneyland, significant older housing inventory in West Anaheim, and diverse seller situations make cash buyers an attractive option for homeowners who want to avoid costly updates."},
+    {"name":"Santa Ana","slug":"santa-ana","zips":["92701","92703","92704","92705","92706","92707"],"neighborhoods":["Floral Park","Park Santiago","Downtown Santa Ana","South Coast Metro adjacent","Lacy"],"county":"Orange County","context":"Orange County's second-largest city with home values from $550K to $1.2M, featuring a mix of historic neighborhoods and urban development near the civic center","specifics":"Santa Ana has a high concentration of older homes, a significant rental market, and many multi-generational family properties where cash buyers provide the fastest and simplest solution."},
+    {"name":"Huntington Beach","slug":"huntington-beach","zips":["92646","92647","92648","92649"],"neighborhoods":["Downtown HB","Seacliff","Huntington Harbour","Meadowlark","South Huntington"],"county":"Orange County","context":"Surf City USA with home values from $700K to $3M+ for oceanfront homes, a highly desirable coastal community with strong year-round demand","specifics":"Huntington Beach homeowners frequently deal with flood zone considerations, coastal commission requirements, and vacation rental regulations that complicate traditional listings."},
+    {"name":"Newport Beach","slug":"newport-beach","zips":["92657","92660","92661","92662","92663"],"neighborhoods":["Corona del Mar","Newport Coast","Balboa Island","Lido Isle","West Newport"],"county":"Orange County","context":"one of California's most prestigious coastal communities with median home prices often exceeding $3M, driven by luxury buyers and second-home investors","specifics":"Newport Beach properties often involve trust sales, divorce settlements on high-value assets, or landlords managing vacation rental compliance under Newport Beach short-term rental ordinances."},
+    {"name":"Mission Viejo","slug":"mission-viejo","zips":["92691","92692"],"neighborhoods":["Lake Mission Viejo","Aegean Hills","Painted Trails","Canyon Crest","Melinda Heights"],"county":"Orange County","context":"a master-planned community in South Orange County with home values typically ranging from $750K to $1.5M, known for its lake, excellent schools, and stable property values","specifics":"Mission Viejo's lake community HOA, strict architectural guidelines, and large share of long-term homeowners mean many sellers deal with estate sales, trust transfers, or major deferred maintenance after decades of ownership."},
+    {"name":"Laguna Hills","slug":"laguna-hills","zips":["92653","92654"],"neighborhoods":["Moulton Ranch","Laguna Hills Estates","Nellie Gail Ranch","Creekside","Village Walk"],"county":"Orange County","context":"a quiet South OC city with home values from $700K to $2M+, anchored by established residential neighborhoods and easy freeway access","specifics":"Laguna Hills has a high percentage of long-term homeowners, meaning many properties coming to market involve estate sales, trust administration, or deferred maintenance on older homes."},
+    {"name":"Laguna Niguel","slug":"laguna-niguel","zips":["92677"],"neighborhoods":["Bear Brand Ranch","Laguna Sur","Marina Hills","Monarch Beach","Pacific Island"],"county":"Orange County","context":"an upscale South OC community bordering the coast with median home prices around $1.2M and strong demand from buyers seeking Laguna Beach proximity","specifics":"Laguna Niguel's hillside communities, gated enclaves, and HOA-governed developments mean sellers often face transfer delays, special assessments, and disclosure requirements that slow traditional sales."},
+    {"name":"Lake Forest","slug":"lake-forest","zips":["92630","92679"],"neighborhoods":["Foothill Ranch","Baker Ranch","Serrano","Sun and Sail","Portola Hills"],"county":"Orange County","context":"a growing South OC community with home values from $750K to $1.5M, known for newer master-planned neighborhoods and easy Toll Road access","specifics":"Lake Forest's mix of resale HOA communities and newer construction means sellers dealing with inherited properties, divorce, or relocation often find cash sales the fastest path to closing."},
+    {"name":"San Clemente","slug":"san-clemente","zips":["92672","92673"],"neighborhoods":["Southeast San Clemente","Talega","Las Palmas","Southwest San Clemente","Northwest San Clemente"],"county":"Orange County","context":"a coastal surf town at the southern tip of Orange County with median home prices around $1.1M, known for Spanish Colonial architecture and beach lifestyle","specifics":"San Clemente homeowners often deal with hillside properties requiring coastal commission disclosure, older homes with deferred maintenance, or vacation rental compliance issues."},
+    {"name":"San Juan Capistrano","slug":"san-juan-capistrano","zips":["92675"],"neighborhoods":["Mission Hills","Rancho Madrina","Ortega Ranch","Marbella","Shangri-La"],"county":"Orange County","context":"a historic city known for the Mission and equestrian estates with home values ranging from $700K to $5M+ for horse properties","specifics":"San Juan Capistrano's equestrian zoning, historic district regulations, and large share of estate properties create complexities that often make cash sales the most practical option."},
+    {"name":"Aliso Viejo","slug":"aliso-viejo","zips":["92656"],"neighborhoods":["Glenwood","Pacific Ridge","Vantis","Aliso Ranch","Canyon Vistas"],"county":"Orange County","context":"a planned community in South Orange County with home values typically ranging from $700K to $1.3M, popular with families and young professionals","specifics":"Aliso Viejo's heavily HOA-governed communities and large condo market mean sellers frequently face special assessments, rental restrictions, and mandatory disclosure packets that extend traditional closing timelines."},
+    {"name":"Costa Mesa","slug":"costa-mesa","zips":["92626","92627","92628"],"neighborhoods":["Eastside Costa Mesa","Westside Costa Mesa","Mesa Verde","South Coast Metro","College Park"],"county":"Orange County","context":"a dynamic Orange County city adjacent to Newport Beach with home values ranging from $800K to $2M+, depending on proximity to the coast","specifics":"Costa Mesa's mix of older mid-century homes needing updates, condo complexes with HOA issues, and landlords navigating California tenant protections makes cash sales a frequent solution."},
+    {"name":"Tustin","slug":"tustin","zips":["92780","92782"],"neighborhoods":["Old Town Tustin","Tustin Ranch","Tustin Legacy","Columbus Grove","Greenwood"],"county":"Orange County","context":"a central Orange County city with home values from $700K to $1.3M, featuring a charming historic downtown and newer master-planned communities","specifics":"Tustin's mix of older Old Town properties and newer Tustin Legacy developments creates diverse seller situations. Estate sales in Old Town and HOA complexities in newer developments both drive cash sale demand."},
+    {"name":"Fountain Valley","slug":"fountain-valley","zips":["92708"],"neighborhoods":["North Fountain Valley","South Fountain Valley","Mile Square Park area","Tiburon","Stratford"],"county":"Orange County","context":"a central Orange County city with home values from $800K to $1.4M, known as 'A Nice Place to Live' for its excellent schools and quiet residential character","specifics":"Fountain Valley's long-term owner-occupied neighborhoods mean many properties involve estate sales or significant deferred maintenance after decades of ownership, making cash buyers a practical solution."},
+    {"name":"Garden Grove","slug":"garden-grove","zips":["92840","92841","92843","92844","92845"],"neighborhoods":["West Garden Grove","East Garden Grove","Strawberry Farms","Historic Main Street","Buena Clinton"],"county":"Orange County","context":"a diverse central OC city with home values from $650K to $1M, home to the Crystal Cathedral and a vibrant Vietnamese and Korean community","specifics":"Garden Grove has significant older housing inventory and a strong rental market. Sellers dealing with deferred maintenance, multi-generational ownership transitions, or tenant situations frequently choose cash buyers."},
+    {"name":"Fullerton","slug":"fullerton","zips":["92831","92832","92833","92835"],"neighborhoods":["Downtown Fullerton","Sunny Hills","Amerige Heights","Raymond Hills","Richman"],"county":"Orange County","context":"a college town and established Orange County community with home values from $650K to $1.5M, known for its tree-lined streets and historic downtown","specifics":"Fullerton's large student rental market, older craftsman homes near downtown, and active investor community mean sellers often deal with tenant situations or significant deferred maintenance."},
+    {"name":"Orange","slug":"orange","zips":["92856","92857","92859","92861","92862","92863","92864","92865","92866","92867","92868","92869"],"neighborhoods":["Old Towne Orange","Orange Hills","Serrano Heights","Santiago Hills","Panorama Heights"],"county":"Orange County","context":"a historic Orange County city with home values from $700K to $1.5M, known for its antique-lined historic plaza and strong community character","specifics":"Orange's historic district properties often require specialized renovations, while its broader market sees typical estate sales and investor exits that benefit from a clean cash transaction."},
+    {"name":"Yorba Linda","slug":"yorba-linda","zips":["92886","92887"],"neighborhoods":["Vista Del Verde","Travis Ranch","Bryson","East Lake Village","Country Club"],"county":"Orange County","context":"the 'Land of Gracious Living' with home values from $850K to $2M+, birthplace of Richard Nixon and known for its horse trails and upscale residential character","specifics":"Yorba Linda's equestrian-zoned properties, strong HOA presence, and significant share of long-term homeowners make estate sales and downsizing the primary drivers for cash sales."},
+    {"name":"Dana Point","slug":"dana-point","zips":["92624","92629"],"neighborhoods":["Lantern District","Monarch Beach","Capistrano Beach","Dana Hills","Strand at Headlands"],"county":"Orange County","context":"a charming harbor city at the southern end of Orange County with home values from $800K to $4M+ for oceanfront properties","specifics":"Dana Point's coastal location means sellers frequently navigate California Coastal Commission requirements, short-term rental ordinance compliance, and high property tax carry costs."},
+    {"name":"Laguna Beach","slug":"laguna-beach","zips":["92651","92652","92653","92654"],"neighborhoods":["North Laguna","South Laguna","Top of the World","Temple Hills","Woods Cove"],"county":"Orange County","context":"a world-famous arts colony and beach community with median home prices over $2.5M, known for the Pageant of the Masters and dramatic coastal bluffs","specifics":"Laguna Beach properties frequently involve coastal commission permits, view easement complications, and high-value trust or estate sales where a fast, discreet cash close is preferable to a public listing."},
+    {"name":"Brea","slug":"brea","zips":["92821","92823"],"neighborhoods":["Downtown Brea","Country Hills","Olinda Ranch","Carbon Canyon","Brea Hills"],"county":"Orange County","context":"a North OC city with home values from $700K to $1.3M, known for its downtown arts corridor and convenient location at the junction of several major freeways","specifics":"Brea's mix of established neighborhoods and newer hillside developments means sellers deal with a range of situations from estate sales on older homes to HOA issues in newer communities."},
+    {"name":"Placentia","slug":"placentia","zips":["92870"],"neighborhoods":["Old Placentia","Kraemer Hills","Golden Hills","Atwood","Melrose"],"county":"Orange County","context":"a North OC city with home values from $700K to $1.2M, offering a quiet residential character and convenient access to the 57 and 91 freeways","specifics":"Placentia's older neighborhoods and long-term homeowner base mean estate sales and deferred maintenance are common, making cash buyers a practical and welcomed solution for sellers."},
+    {"name":"Buena Park","slug":"buena-park","zips":["90620","90621"],"neighborhoods":["Buena Park Downtown","Knotts Berry Farm area","Whitaker-Jaynes Estates","La Palma adjacent","Orangethorpe"],"county":"Orange County","context":"a North OC entertainment city with home values from $650K to $1M, anchored by Knotts Berry Farm and a mix of older and newer residential developments","specifics":"Buena Park's older housing inventory and active investor market create frequent opportunities for cash sales among landlords, heirs managing inherited properties, or sellers facing significant repair needs."},
+    {"name":"La Habra","slug":"la-habra","zips":["90631","90632"],"neighborhoods":["North La Habra","South La Habra","Downtown La Habra","Westridge","Macy"],"county":"Orange County","context":"a North OC city with home values from $650K to $1M, offering more affordability than many OC communities while maintaining proximity to LA County","specifics":"La Habra's older housing stock and border location between LA and Orange counties attract investors. Estate sales and deferred maintenance are common scenarios where cash buyers provide the cleanest solution."},
+    {"name":"Stanton","slug":"stanton","zips":["90680"],"neighborhoods":["North Stanton","South Stanton","Central Stanton","Dale adjacent","Orangewood"],"county":"Orange County","context":"one of OC's more affordable cities with home values from $600K to $850K, offering entry-level pricing in a desirable county with strong rental demand","specifics":"Stanton's affordable price point and strong rental market attract investors. Sellers dealing with older properties, tenant situations, or financial hardship frequently benefit from a fast cash offer."},
+    {"name":"Westminster","slug":"westminster","zips":["92683","92684"],"neighborhoods":["Little Saigon","Midway City adjacent","Westminster Manor","College View","Sigler Park"],"county":"Orange County","context":"home to the nation's largest Vietnamese-American community (Little Saigon) with home values from $700K to $1.1M and a strong cultural identity","specifics":"Westminster's large multi-generational ownership base and significant estate sale market mean many properties involve complex family ownership transitions where a straightforward cash sale is preferred."},
+    {"name":"Seal Beach","slug":"seal-beach","zips":["90740"],"neighborhoods":["Old Town Seal Beach","Leisure World","The Hill","College Park East","Bridgeport"],"county":"Orange County","context":"a small coastal city with home values from $700K to $2M+, known for its charming main street, pier, and large Leisure World retirement community","specifics":"Seal Beach's large Leisure World senior community generates significant estate sale activity. Old Town properties often need updates after long-term ownership, making cash buyers an attractive option."},
+    {"name":"Rancho Santa Margarita","slug":"rancho-santa-margarita","zips":["92688"],"neighborhoods":["Dove Canyon","Robinson Ranch","Trabuco Highlands","Las Flores","Melinda Heights"],"county":"Orange County","context":"a master-planned community in the Saddleback Valley with home values from $700K to $1.5M, known for its lake, trails, and family-friendly atmosphere","specifics":"RSM's heavily HOA-governed communities and family-focused demographics mean sellers dealing with relocation, upsizing, or estate situations frequently need the speed and certainty of a cash offer."},
+    {"name":"Laguna Woods","slug":"laguna-woods","zips":["92637"],"neighborhoods":["Village One","Village Two","Village Three","Gate 1","Gate 5"],"county":"Orange County","context":"a unique age-restricted (55+) community with home values from $300K to $700K, one of the largest senior living communities in the country","specifics":"Laguna Woods' age-restricted status, complex HOA governance, and high estate sale volume make cash buyers especially valuable for families managing a parent's estate or seniors downsizing quickly."},
+    # Inland Empire
+    {"name":"Riverside","slug":"riverside","zips":["92501","92503","92504","92505","92506","92507","92508"],"neighborhoods":["Wood Streets","Alessandro Heights","Canyon Crest","Orangecrest","La Sierra"],"county":"Riverside County","context":"the Inland Empire's largest city with home values from $400K to $900K, offering diverse neighborhoods from historic districts to newer suburban developments","specifics":"Riverside's older housing stock, large rental investor market, and significant share of distressed properties mean cash buyers are a common and practical solution for sellers facing repairs, tenant issues, or financial hardship."},
+    {"name":"Corona","slug":"corona","zips":["92879","92880","92881","92882","92883"],"neighborhoods":["South Corona","Sierra del Oro","Chase Ranch","Horsethief Canyon","El Cerrito"],"county":"Riverside County","context":"a growing Inland Empire city at the gateway to Orange County with home values from $550K to $950K, popular for relative affordability and freeway access","specifics":"Corona's position between OC and the IE attracts both investors and primary homeowners. Many sellers are landlords or homeowners facing major repairs on older properties who prefer a fast cash sale."},
+    {"name":"Murrieta","slug":"murrieta","zips":["92562","92563"],"neighborhoods":["Central Murrieta","West Murrieta","Greer Ranch","Spencers Crossing","Copper Canyon"],"county":"Riverside County","context":"a fast-growing Inland Empire city with home values from $450K to $900K, offering more space and affordability than coastal communities","specifics":"Murrieta's rapid growth means many homeowners are investors with multiple properties, landlords managing tenant transitions, or families relocating for work who need to close quickly."},
+    {"name":"Temecula","slug":"temecula","zips":["92590","92591","92592"],"neighborhoods":["Wine Country","Redhawk","Paloma del Sol","Harveston","Old Town Temecula"],"county":"Riverside County","context":"the Inland Empire's wine country city with home values from $500K to $1.5M+, popular for its wineries, master-planned communities, and relative affordability","specifics":"Temecula's large share of HOA-governed communities, vacation rental properties near the wineries, and significant retiree population mean estate sales and downsizing are common motivators for a quick cash sale."},
+    {"name":"Menifee","slug":"menifee","zips":["92584","92585","92586","92587"],"neighborhoods":["Sun City","Quail Valley","Romoland","Paloma Valley","Heritage Lake"],"county":"Riverside County","context":"one of the fastest-growing cities in California with home values from $400K to $750K, rapidly developing from a retirement community into a full-service city","specifics":"Menifee's large Sun City retirement community generates significant estate sale activity. The city's rapid growth also attracts investors and relocating families who need quick, certain closes."},
+    {"name":"Lake Elsinore","slug":"lake-elsinore","zips":["92530","92532"],"neighborhoods":["Canyon Hills","Tuscany Hills","Terra Cotta","Lakeland Village","Downtown Lake Elsinore"],"county":"Riverside County","context":"an Inland Empire lake community with home values from $380K to $650K, one of Southern California's most affordable markets with outdoor recreation appeal","specifics":"Lake Elsinore's affordable price point and lakefront location attract investors and vacation home buyers. Sellers dealing with older properties or financial hardship benefit most from a fast cash offer."},
+    {"name":"Ontario","slug":"ontario","zips":["91761","91762","91764"],"neighborhoods":["Colony District","Creekside","Mountain House","Archibald Ranch","Ontario Ranch"],"county":"San Bernardino County","context":"an Inland Empire logistics hub with home values from $450K to $800K, home to Ontario International Airport and significant warehouse distribution employment","specifics":"Ontario's large working-class homeowner base and active rental market create frequent opportunities for cash sales. Sellers facing financial hardship, deferred maintenance, or tenant situations find cash buyers the most practical solution."},
+    {"name":"Rancho Cucamonga","slug":"rancho-cucamonga","zips":["91701","91730","91737","91739"],"neighborhoods":["Etiwanda","Alta Loma","Victoria","Northtown","Haven View Estates"],"county":"San Bernardino County","context":"one of the Inland Empire's most desirable cities with home values from $550K to $1.2M, known for planned communities, mountain views, and a growing job market","specifics":"Rancho Cucamonga's large HOA community base and strong rental market mean sellers often deal with special assessments, investor exits, or families relocating who need a guaranteed fast close."},
+    # San Diego County
+    {"name":"San Diego","slug":"san-diego","zips":["92101","92103","92104","92105","92108","92115","92116","92117","92120","92123"],"neighborhoods":["North Park","Hillcrest","Mission Valley","San Carlos","Kensington","Linda Vista","Clairemont"],"county":"San Diego County","context":"California's second-largest city with home values ranging widely from $650K to $3M+ depending on neighborhood and proximity to the coast","specifics":"San Diego's diverse neighborhoods, large military and biotech employer base, and significant rental market mean sellers come from every situation — relocation, divorce, inherited property, tired landlord."},
+    {"name":"Chula Vista","slug":"chula-vista","zips":["91910","91911","91913","91914","91915"],"neighborhoods":["Eastlake","Otay Ranch","Rancho del Rey","Bonita adjacent","Downtown Chula Vista"],"county":"San Diego County","context":"San Diego's second-largest city with home values from $600K to $900K, featuring master-planned communities in the east and established neighborhoods in the west","specifics":"Chula Vista's rapid eastern growth has created a large HOA-governed community market. Sellers dealing with special assessments, Mello-Roos tax complications, or tenant-occupied investment properties often find cash sales the simplest path."},
+    {"name":"Oceanside","slug":"oceanside","zips":["92054","92056","92057","92058"],"neighborhoods":["Downtown Oceanside","Fire Mountain","South Oceanside","Rancho del Oro","Jeffries Ranch"],"county":"San Diego County","context":"North San Diego County's largest city with home values from $600K to $1.5M+, offering coastal living at more accessible prices than neighboring Carlsbad","specifics":"Oceanside's large military community adjacent to Camp Pendleton means many sellers are PCS-ing on short notice and need a fast, guaranteed close without the uncertainty of a traditional listing."},
+    {"name":"Escondido","slug":"escondido","zips":["92025","92026","92027","92029"],"neighborhoods":["Hidden Meadows","Felicita","Valley Center adjacent","Central Escondido","East Escondido"],"county":"San Diego County","context":"an inland San Diego County city with home values from $550K to $900K, offering larger lots and more affordability than coastal communities","specifics":"Escondido's older housing stock, large share of rental properties, and diverse seller situations make cash sales a frequent and practical choice."},
+    {"name":"Carlsbad","slug":"carlsbad","zips":["92008","92009","92010","92011"],"neighborhoods":["La Costa","Aviara","Bressi Ranch","Calavera Hills","Village by the Sea"],"county":"San Diego County","context":"one of San Diego County's most desirable coastal cities with median home prices around $1.3M, known for Legoland, world-class golf, and pristine beaches","specifics":"Carlsbad's mix of coastal estates, master-planned inland communities, and vacation-rental properties means sellers often face HOA complexities, coastal permit requirements, or tenant transition issues."},
+    {"name":"San Marcos","slug":"san-marcos","zips":["92069","92078"],"neighborhoods":["San Elijo Hills","Rancho Santalina","Twin Oaks Valley","Bradley","Richland"],"county":"San Diego County","context":"a growing North San Diego city with home values from $600K to $1.1M, home to Cal State San Marcos and several master-planned communities","specifics":"San Marcos's college town atmosphere, large rental market, and mix of newer HOA communities create diverse seller situations where speed and simplicity often outweigh maximizing list price."},
+    {"name":"Santee","slug":"santee","zips":["92071"],"neighborhoods":["Carlton Hills","Carlton Oaks","Shadow Hills","Prospect","Mission Gorge"],"county":"San Diego County","context":"an East County San Diego city with home values from $550K to $850K, offering more space and affordability than coastal communities with easy freeway access","specifics":"Santee's older neighborhoods and active investor market create frequent opportunities for cash sales among landlords, heirs managing inherited properties, or sellers facing major repairs."},
+    {"name":"La Mesa","slug":"la-mesa","zips":["91941","91942","91943","91944"],"neighborhoods":["La Mesa Village","Rancho Grossmont","El Cajon adjacent","Highlands","Del Cerro adjacent"],"county":"San Diego County","context":"the 'Jewel of the Hills' with home values from $600K to $1M, known for its charming downtown village and central San Diego County location","specifics":"La Mesa's walkable downtown and older craftsman homes attract long-term owners whose estates or deferred maintenance situations benefit from a cash buyer who accepts properties as-is."},
+    {"name":"Poway","slug":"poway","zips":["92064"],"neighborhoods":["Old Poway","Green Valley","Twin Peaks","Heritage","Poway Road corridor"],"county":"San Diego County","context":"the 'City in the Country' with home values from $800K to $2M+, known for its horse trails, top-rated schools, and semi-rural character","specifics":"Poway's equestrian properties, large lots, and long-term homeowner base mean estate sales, downsizing, and deferred maintenance on older properties are common drivers for cash sales."},
+    {"name":"National City","slug":"national-city","zips":["91950"],"neighborhoods":["Downtown National City","Sweetwater","Kimball","Paradise Hills adjacent","Harbor District"],"county":"San Diego County","context":"San Diego's most densely populated city with home values from $500K to $750K, offering entry-level pricing adjacent to Chula Vista and downtown San Diego","specifics":"National City's affordable price point and strong rental demand attract investors. Sellers dealing with older properties, tenant situations, or financial hardship frequently benefit from a fast cash offer."},
+    {"name":"Lemon Grove","slug":"lemon-grove","zips":["91945"],"neighborhoods":["Downtown Lemon Grove","Mount Helix adjacent","Broadway","Skyline adjacent","Sunset Hills"],"county":"San Diego County","context":"a small San Diego County city with home values from $550K to $800K, known for its small-town character and central location near La Mesa and El Cajon","specifics":"Lemon Grove's older single-family homes and active investor market create frequent opportunities for estate sales and cash transactions among sellers who prefer speed over maximizing list price."},
+    {"name":"El Cajon","slug":"el-cajon","zips":["92019","92020","92021"],"neighborhoods":["Rancho San Diego","Bostonia","Fletcher Hills","Granite Hills","Crest adjacent"],"county":"San Diego County","context":"an East County San Diego city with home values from $500K to $900K, known for its large Middle Eastern community and affordable pricing relative to coastal San Diego","specifics":"El Cajon's diverse seller base, older housing stock, and significant rental market mean cash buyers are a practical solution for a wide range of homeowner situations from estate sales to investor exits."},
+    {"name":"Vista","slug":"vista","zips":["92081","92083","92084"],"neighborhoods":["Downtown Vista","Shadowridge","Rancho Minerva","Emerald Heights","Buena Creek"],"county":"San Diego County","context":"a North County San Diego city with home values from $550K to $950K, known for its craft brewery scene, avocado groves, and mild climate","specifics":"Vista's mix of older neighborhoods, agricultural properties, and newer developments creates diverse seller situations where cash buyers provide speed and certainty that traditional listings cannot match."},
+    {"name":"Encinitas","slug":"encinitas","zips":["92024"],"neighborhoods":["Leucadia","Cardiff-by-the-Sea","Olivenhain","New Encinitas","Old Encinitas"],"county":"San Diego County","context":"a beloved North San Diego County beach community with home values typically ranging from $1M to $4M+, known for its surf culture and coastal lifestyle","specifics":"Encinitas sellers frequently encounter coastal bluff setback requirements, short-term rental compliance issues, and high carrying costs that make a quick cash sale attractive over a drawn-out listing process."},
+    {"name":"Solana Beach","slug":"solana-beach","zips":["92075"],"neighborhoods":["Solana Hills","Del Mar Heights adjacent","Cedros Design District","Lomas Santa Fe","Solana Beach Highlands"],"county":"San Diego County","context":"a small North County coastal gem with home values from $1.2M to $4M+, known for the Del Mar Racetrack proximity, Cedros Design District, and scenic blufftop homes","specifics":"Solana Beach's coastal bluff properties, high values, and frequent trust and estate sales make cash buyers especially valuable for sellers who need a fast, discreet transaction."},
+    {"name":"Del Mar","slug":"del-mar","zips":["92014"],"neighborhoods":["Del Mar Village","Carmel Valley adjacent","Del Mar Mesa","Olde Del Mar","Crest Road"],"county":"San Diego County","context":"an iconic coastal village with median home prices over $2.5M, known for the Del Mar Racetrack, pristine beach, and one of California's most desirable zip codes","specifics":"Del Mar's ultra-premium market sees estate sales, trust transfers, and divorce settlements on high-value assets where sellers prioritize a guaranteed close over maximizing list price."},
+    {"name":"La Jolla","slug":"la-jolla","zips":["92037"],"neighborhoods":["Bird Rock","Windansea","La Jolla Shores","La Jolla Village","Country Club"],"county":"San Diego County","context":"San Diego's premier coastal neighborhood with median home prices over $3M, known for the Cove, UCSD, and Scripps Institution of Oceanography","specifics":"La Jolla properties frequently involve trust and estate sales, divorce settlements on premium coastal assets, and sellers who need a fast, private transaction without the exposure of a public listing."},
+    {"name":"Coronado","slug":"coronado","zips":["92118"],"neighborhoods":["Coronado Village","Coronado Shores","Coronado Cays","Silver Strand adjacent","North Island adjacent"],"county":"San Diego County","context":"an island city connected to San Diego by the iconic Coronado Bridge, with median home prices over $2M and a strong military and tourism-driven economy","specifics":"Coronado's island location, large military homeowner base with PCS relocation needs, and significant vacation rental market create unique seller situations where a fast, guaranteed close is often the priority."},
+    {"name":"Imperial Beach","slug":"imperial-beach","zips":["91932"],"neighborhoods":["North IB","South IB","Palm City","Bayside","IB Pier area"],"county":"San Diego County","context":"San Diego County's southernmost beach city with home values from $550K to $1M+, known for its surf contest, proximity to the border, and up-and-coming real estate market","specifics":"Imperial Beach's evolving market, older housing stock, and proximity to the border create a unique mix of seller situations where cash buyers provide speed and certainty that traditional listings often cannot."},
 ]
 
 YEAR = datetime.now().year
 
 
-def build_page(city: dict) -> str:
+def build_page(city):
     name = city["name"]
     slug = city["slug"]
     zips = city["zips"]
@@ -315,7 +126,6 @@ def build_page(city: dict) -> str:
     zip_str = ", ".join(zips)
     neighborhood_list = "".join(f"<span>{n}</span>" for n in neighborhoods)
     neighborhood_prose = ", ".join(neighborhoods[:-1]) + f", and {neighborhoods[-1]}" if len(neighborhoods) > 1 else neighborhoods[0]
-
     canonical_url = f"https://www.goldencoastcashoffer.com/sell-my-house-fast-{slug}-ca/"
     city_page_url = f"https://www.goldencoastcashoffer.com/{slug}/"
 
@@ -330,49 +140,14 @@ def build_page(city: dict) -> str:
 <meta property="og:description" content="We buy houses in {name}, CA fast for cash. No repairs needed. Get a fair cash offer in 24 hours. Call 949-280-5139.">
 <link rel="canonical" href="{canonical_url}">
 <script type="application/ld+json">
-{{
-  "@context": "https://schema.org",
-  "@type": "RealEstateAgent",
-  "name": "Golden Coast Cash Offer",
-  "telephone": "949-280-5139",
-  "url": "https://www.goldencoastcashoffer.com",
-  "areaServed": {{
-    "@type": "City",
-    "name": "{name}",
-    "addressRegion": "CA"
-  }},
-  "description": "We buy houses fast in {name}, CA for cash. No repairs, no fees, no commissions. Cash offer in 24 hours.",
-  "priceRange": "Cash offers"
-}}
+{{"@context":"https://schema.org","@type":"RealEstateAgent","name":"Golden Coast Cash Offer","telephone":"949-280-5139","url":"https://www.goldencoastcashoffer.com","areaServed":{{"@type":"City","name":"{name}","addressRegion":"CA"}},"description":"We buy houses fast in {name}, CA for cash. No repairs, no fees, no commissions. Cash offer in 24 hours.","priceRange":"Cash offers"}}
 </script>
 <script type="application/ld+json">
-{{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {{"@type": "Question","name": "How fast can you buy my {name} house?","acceptedAnswer": {{"@type": "Answer","text": "We can close in as few as 7 days in {name}. Call 949-280-5139 and we can have a cash offer to you within 24 hours."}}}},
-    {{"@type": "Question","name": "Do I need to make repairs before selling?","acceptedAnswer": {{"@type": "Answer","text": "Never. We buy {name} houses in any condition — no repairs, no cleaning, no staging required."}}}},
-    {{"@type": "Question","name": "Are there any fees or commissions?","acceptedAnswer": {{"@type": "Answer","text": "Zero fees, zero commissions, zero closing costs. What we offer is exactly what you receive at closing."}}}},
-    {{"@type": "Question","name": "Do you buy houses with tenants in {name}?","acceptedAnswer": {{"@type": "Answer","text": "Yes. We buy {county} properties with tenants in place. We handle California tenant protection requirements after closing so you don't have to."}}}}
-  ]
-}}
+{{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{{"@type":"Question","name":"How fast can you buy my {name} house?","acceptedAnswer":{{"@type":"Answer","text":"We can close in as few as 7 days in {name}. Call 949-280-5139 and we can have a cash offer to you within 24 hours."}}}},{{"@type":"Question","name":"Do I need to make repairs before selling?","acceptedAnswer":{{"@type":"Answer","text":"Never. We buy {name} houses in any condition."}}}},{{"@type":"Question","name":"Are there any fees or commissions?","acceptedAnswer":{{"@type":"Answer","text":"Zero fees, zero commissions, zero closing costs. What we offer is exactly what you receive at closing."}}}},{{"@type":"Question","name":"Do you buy houses with tenants in {name}?","acceptedAnswer":{{"@type":"Answer","text":"Yes. We buy {county} properties with tenants in place and handle California tenant protection requirements after closing."}}}}]}}
 </script>
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QW7L1QHYFR"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){{dataLayer.push(arguments);}}
-  gtag('js', new Date());
-  gtag('config', 'G-QW7L1QHYFR');
-</script>
-<!-- Microsoft Clarity -->
-<script type="text/javascript">
-    (function(c,l,a,r,i,t,y){{
-        c[a]=c[a]||function(){{(c[a].q=c[a].q||[]).push(arguments)}};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    }})(window, document, "clarity", "script", "wmyw873b7e");
-</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','G-QW7L1QHYFR');</script>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){{c[a]=c[a]||function(){{(c[a].q=c[a].q||[]).push(arguments)}};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);}})(window,document,"clarity","script","wmyw873b7e");</script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{{box-sizing:border-box;margin:0;padding:0}}
@@ -397,8 +172,8 @@ body{{background:#fdfaf5;color:#2a2018;font-family:'Nunito',sans-serif;font-weig
 .form-row input::placeholder,.hero-form input::placeholder{{color:rgba(255,255,255,0.4)}}
 .hero-form select{{color:rgba(255,255,255,0.6)}}
 .hero-form select option{{color:#000}}
-.btn-primary{{display:block;width:100%;background:#e8823a;color:#fff;border:none;padding:14px;font-weight:700;font-size:14px;border-radius:20px;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:10px;letter-spacing:0.03em}}
-.hero-form .fine{{font-size:10px;color:rgba(255,255,255,0.35);margin-top:8px;text-transform:none;letter-spacing:0}}
+.btn-primary{{display:block;width:100%;background:#e8823a;color:#fff;border:none;padding:14px;font-weight:700;font-size:14px;border-radius:20px;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:10px}}
+.hero-form .fine{{font-size:10px;color:rgba(255,255,255,0.35);margin-top:8px}}
 .layout{{max-width:1080px;margin:0 auto;padding:48px 24px;display:grid;grid-template-columns:1fr 300px;gap:44px;align-items:start}}
 @media(max-width:768px){{.layout{{grid-template-columns:1fr}}.form-row{{grid-template-columns:1fr}}}}
 .main h2{{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:#0f4a63;margin:36px 0 12px;line-height:1.2}}
@@ -439,28 +214,20 @@ footer a{{color:#f8d264;text-decoration:none}}
 </style>
 </head>
 <body>
-
 <nav class="site-nav">
   <a href="/" class="nav-logo">Golden Coast Cash Offer</a>
   <div class="nav-links">
-    <a href="/">Home</a>
-    <a href="/blog/">Blog</a>
-    <a href="tel:9492805139">949-280-5139</a>
+    <a href="/">Home</a><a href="/blog/">Blog</a><a href="tel:9492805139">949-280-5139</a>
     <a href="/#offer" class="nav-cta">Get Cash Offer</a>
   </div>
 </nav>
-
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-badge">{county} · Southern California</div>
     <h1>Sell My House Fast in {name}, CA</h1>
     <p class="hero-sub">Get a fair cash offer in 24 hours. No repairs, no fees, no commissions. Close in as few as 7 days — or on your timeline.</p>
     <div class="hero-pills">
-      <span class="pill">No Repairs Needed</span>
-      <span class="pill">No Agent Fees</span>
-      <span class="pill">Close in 7 Days</span>
-      <span class="pill">Tenants OK</span>
-      <span class="pill">Any Condition</span>
+      <span class="pill">No Repairs Needed</span><span class="pill">No Agent Fees</span><span class="pill">Close in 7 Days</span><span class="pill">Tenants OK</span><span class="pill">Any Condition</span>
     </div>
     <div class="hero-form">
       <p>Get your free cash offer — takes 60 seconds</p>
@@ -469,98 +236,62 @@ footer a{{color:#f8d264;text-decoration:none}}
         <input type="tel" placeholder="Phone Number">
       </div>
       <input type="text" placeholder="Property Address in {name}" style="margin-bottom:10px">
-      <select>
-        <option value="" disabled selected>Your Situation (optional)</option>
-        <option>Behind on mortgage / foreclosure</option>
-        <option>Inherited property</option>
-        <option>Divorce / separation</option>
-        <option>Tired landlord / tenants</option>
-        <option>Needs major repairs</option>
-        <option>Relocating</option>
-        <option>Downsizing</option>
-        <option>Vacant property</option>
-        <option>Just want to sell fast</option>
-        <option>Other</option>
-      </select>
+      <select><option value="" disabled selected>Your Situation (optional)</option><option>Behind on mortgage / foreclosure</option><option>Inherited property</option><option>Divorce / separation</option><option>Tired landlord / tenants</option><option>Needs major repairs</option><option>Relocating</option><option>Downsizing</option><option>Vacant property</option><option>Just want to sell fast</option><option>Other</option></select>
       <button class="btn-primary" onclick="window.location.href='/#offer'">Get My Free Cash Offer →</button>
       <p class="fine">100% confidential · No obligation · No spam ever</p>
     </div>
   </div>
 </div>
-
 <div class="layout">
   <div class="main">
-
     <h2>We Buy Houses in {name}, CA — Any Condition, Any Situation</h2>
     <p>Golden Coast Cash Offer purchases homes throughout {name}, {county}. Whether you're dealing with an inherited property, facing foreclosure, going through a divorce, or simply need to sell quickly without the hassle of repairs and showings, we provide a straightforward alternative to the traditional listing process.</p>
     <p>{name} is {context}. {specifics}</p>
-
     <div class="zip-box">
       <h3>ZIP Codes We Serve in {name}</h3>
       <div class="zips">{zip_str}</div>
     </div>
-
     <div class="neighborhood-box">
       <h3>Neighborhoods We Buy Houses In</h3>
       {neighborhood_list}
     </div>
-
     <h2>How Our {name} Home Buying Process Works</h2>
     <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <h4>Contact Us</h4>
-        <p>Call 949-280-5139 or fill out our form. Tell us about your {name} property — takes 60 seconds.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <h4>Get Your Offer</h4>
-        <p>We research your neighborhood and present a fair, no-obligation cash offer within 24 hours.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <h4>Close &amp; Get Paid</h4>
-        <p>Choose your closing date — as fast as 7 days. We handle all paperwork through a reputable {county} escrow company.</p>
-      </div>
+      <div class="step"><div class="step-num">1</div><h4>Contact Us</h4><p>Call 949-280-5139 or fill out our form. Tell us about your {name} property — takes 60 seconds.</p></div>
+      <div class="step"><div class="step-num">2</div><h4>Get Your Offer</h4><p>We research your neighborhood and present a fair, no-obligation cash offer within 24 hours.</p></div>
+      <div class="step"><div class="step-num">3</div><h4>Close &amp; Get Paid</h4><p>Choose your closing date — as fast as 7 days. We handle all paperwork through a reputable {county} escrow company.</p></div>
     </div>
-
     <div class="cta-block">
       <h3>Ready to Sell Your {name} Home Fast?</h3>
       <p>Call us at 949-280-5139 or fill out our form to get a no-obligation cash offer within 24 hours. No repairs, no fees, no surprises.</p>
       <a href="/#offer">Get My Free Cash Offer</a>
     </div>
-
     <h2>Why {name} Homeowners Choose a Cash Sale</h2>
-    <p>A traditional listing in {name} involves repairs, showings, open houses, buyer financing contingencies, and an average of 30–60+ days to close — even after you find a buyer. For many homeowners, that timeline and uncertainty simply doesn't work.</p>
-    <p>When you sell to Golden Coast Cash Offer, you skip all of it. No repairs. No cleaning. No agents taking 5–6% commission. No buyer asking for credits at the inspection. You get a guaranteed cash offer, and you choose the closing date.</p>
-
+    <p>A traditional listing in {name} involves repairs, showings, open houses, buyer financing contingencies, and an average of 30-60+ days to close. For many homeowners, that timeline and uncertainty simply doesn't work.</p>
+    <p>When you sell to Golden Coast Cash Offer, you skip all of it. No repairs. No cleaning. No agents taking 5-6% commission. No buyer asking for credits at the inspection. You get a guaranteed cash offer, and you choose the closing date.</p>
     <h3>Situations We Commonly Help With in {name}</h3>
     <ul>
-      <li><strong>Inherited properties and trust sales</strong> — We work directly with executors, trustees, and probate attorneys throughout {county} to facilitate clean, efficient transactions</li>
+      <li><strong>Inherited properties and trust sales</strong> — We work directly with executors, trustees, and probate attorneys throughout {county}</li>
       <li><strong>Divorce and community property splits</strong> — California is a community property state. We close quickly so both parties can move forward</li>
-      <li><strong>Homes needing major repairs</strong> — Foundation issues, roof damage, outdated systems, water damage — we buy as-is and handle everything after closing</li>
-      <li><strong>Landlords with tenant situations</strong> — We purchase tenant-occupied properties in {name} and navigate California's complex tenant protection laws ourselves</li>
-      <li><strong>Foreclosure prevention</strong> — If you're behind on payments, a fast cash sale can stop foreclosure and protect your credit</li>
-      <li><strong>Relocation and job transfers</strong> — Close in 7 days or coordinate timing with your move — your schedule, not ours</li>
-      <li><strong>Vacant and abandoned properties</strong> — We buy vacant homes throughout {name} without requiring you to maintain or secure the property during the process</li>
+      <li><strong>Homes needing major repairs</strong> — Foundation issues, roof damage, outdated systems, water damage — we buy as-is</li>
+      <li><strong>Landlords with tenant situations</strong> — We purchase tenant-occupied properties and navigate California's tenant protection laws ourselves</li>
+      <li><strong>Foreclosure prevention</strong> — A fast cash sale can stop foreclosure and protect your credit</li>
+      <li><strong>Relocation and job transfers</strong> — Close in 7 days or coordinate with your move — your schedule, not ours</li>
+      <li><strong>Vacant and abandoned properties</strong> — We buy vacant homes throughout {name} without requiring you to maintain the property</li>
     </ul>
-
     <h2>California-Specific Considerations for {name} Sellers</h2>
-    <p>Selling a home in California involves specific legal and financial considerations that differ from other states. As experienced {county} home buyers, we handle all of these routinely:</p>
     <ul>
-      <li><strong>California disclosure requirements</strong> — California sellers must complete extensive disclosure packages. We handle all required disclosures and don't ask you to dig up records you don't have</li>
-      <li><strong>California Tenant Protection Act</strong> — If your {name} property has tenants, California AB 1482 and local ordinances govern how and when they can be asked to vacate. We take on that responsibility at closing</li>
-      <li><strong>Capital gains considerations</strong> — Long-term {name} homeowners often have significant appreciation. We can refer you to a 1031 exchange specialist or tax advisor if needed before closing</li>
-      <li><strong>Escrow process</strong> — California uses escrow companies rather than attorneys to close transactions. We work with reputable {county} escrow firms and cover standard closing costs on our end</li>
-      <li><strong>HOA transfer requirements</strong> — Many {name} communities have HOA transfer fees, required documentation, and approval processes. We navigate these so you don't have to</li>
+      <li><strong>California disclosure requirements</strong> — We handle all required disclosures and don't ask you to dig up records you don't have</li>
+      <li><strong>California Tenant Protection Act</strong> — If your property has tenants, we take on that responsibility at closing</li>
+      <li><strong>Capital gains considerations</strong> — We can refer you to a 1031 exchange specialist or tax advisor before closing</li>
+      <li><strong>Escrow process</strong> — We work with reputable {county} escrow firms and cover standard closing costs on our end</li>
+      <li><strong>HOA transfer requirements</strong> — We navigate HOA transfer fees, required documentation, and approval processes so you don't have to</li>
     </ul>
-
     <div class="cta-block">
       <h3>Questions About Selling Your {name} Home?</h3>
-      <p>Call us at 949-280-5139 — we're happy to answer questions about the process, what your home might be worth, or anything else. No pressure, no obligation.</p>
+      <p>Call us at 949-280-5139 — happy to answer questions about the process, what your home might be worth, or anything else. No pressure, no obligation.</p>
       <a href="tel:9492805139">Call 949-280-5139</a>
     </div>
-
     <h2>What We Offer {name} Sellers</h2>
     <ul>
       <li>Fair cash offer based on current {name} market conditions and your property's specific location and condition</li>
@@ -570,11 +301,8 @@ footer a{{color:#f8d264;text-decoration:none}}
       <li>Experienced with complex situations including trust sales, probate, tenants, liens, and code violations</li>
       <li>Local {county} buyer — not a national call center or wholesale operation</li>
     </ul>
-
-    <p>To learn more about selling your {name} home or to explore all your options, visit our <a href="{city_page_url}" style="color:#0f4a63;font-weight:600">{name} home buyers page</a>.</p>
-
+    <p>To learn more, visit our <a href="{city_page_url}" style="color:#0f4a63;font-weight:600">{name} home buyers page</a>.</p>
   </div>
-
   <div class="sidebar">
     <div class="s-card">
       <h3>Get Your Free Cash Offer</h3>
@@ -590,13 +318,8 @@ footer a{{color:#f8d264;text-decoration:none}}
     <div class="s-card">
       <h3>Why Sell to Us?</h3>
       <ul class="trust-items">
-        <li>Cash offer in 24 hours</li>
-        <li>Close in as few as 7 days</li>
-        <li>No repairs or cleaning</li>
-        <li>Zero fees or commissions</li>
-        <li>Tenants OK</li>
-        <li>Any condition accepted</li>
-        <li>{county} local buyer</li>
+        <li>Cash offer in 24 hours</li><li>Close in as few as 7 days</li><li>No repairs or cleaning</li>
+        <li>Zero fees or commissions</li><li>Tenants OK</li><li>Any condition accepted</li><li>{county} local buyer</li>
       </ul>
     </div>
     <div class="s-card">
@@ -605,20 +328,16 @@ footer a{{color:#f8d264;text-decoration:none}}
     </div>
   </div>
 </div>
-
 <footer>
   &copy; {YEAR} Golden Coast Cash Offer &middot; <a href="/">goldencoastcashoffer.com</a> &middot; 949-280-5139<br>
   Serving {name} and all of {county}, Southern California
 </footer>
-
 </body>
 </html>"""
 
 
 def main():
     output_base = Path(".")
-    
-
     generated = []
     for city in CITIES:
         folder = output_base / f"sell-my-house-fast-{city['slug']}-ca"
@@ -627,14 +346,9 @@ def main():
         out_file = folder / "index.html"
         with open(out_file, "w", encoding="utf-8") as f:
             f.write(html)
-        generated.append(f"/sell-my-house-fast/{city['slug']}-ca/index.html")
-        print(f"✓ {city['name']} → sell-my-house-fast/{city['slug']}-ca/index.html")
-
+        generated.append(city['name'])
+        print(f"✓ {city['name']} → sell-my-house-fast-{city['slug']}-ca/index.html")
     print(f"\nGenerated {len(generated)} keyword landing pages")
-    print("Upload the sell-my-house-fast/ folder to your repo root")
-    print("\nSearch Console indexing priority order:")
-    for city in CITIES[:10]:
-        print(f"  https://www.goldencoastcashoffer.com/sell-my-house-fast-{city['slug']}-ca/")
 
 
 if __name__ == "__main__":
