@@ -135,15 +135,15 @@ def build_page(city):
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sell My House Fast {name} CA | Cash Offer in 24 Hours</title>
-<meta name="description" content="Sell your {name} house fast for cash. No repairs, no fees, no commissions. Get a fair cash offer in 24 hours. Close in 7 days or on your timeline. Call 949-280-5139.">
+<meta name="description" content="Sell your {name} house fast for cash. No repairs, no fees, no commissions. Get a fair cash offer in 24 hours. Close in 7 days or on your timeline. Call 949-895-1234.">
 <meta property="og:title" content="Sell My House Fast {name} CA | Cash Offer in 24 Hours">
-<meta property="og:description" content="We buy houses in {name}, CA fast for cash. No repairs needed. Get a fair cash offer in 24 hours. Call 949-280-5139.">
+<meta property="og:description" content="We buy houses in {name}, CA fast for cash. No repairs needed. Get a fair cash offer in 24 hours. Call 949-895-1234.">
 <link rel="canonical" href="{canonical_url}">
 <script type="application/ld+json">
-{{"@context":"https://schema.org","@type":"RealEstateAgent","name":"Golden Coast Cash Offer","telephone":"949-280-5139","url":"https://www.goldencoastcashoffer.com","areaServed":{{"@type":"City","name":"{name}","addressRegion":"CA"}},"description":"We buy houses fast in {name}, CA for cash. No repairs, no fees, no commissions. Cash offer in 24 hours.","priceRange":"Cash offers"}}
+{{"@context":"https://schema.org","@type":"RealEstateAgent","name":"Golden Coast Cash Offer","telephone":"949-895-1234","url":"https://www.goldencoastcashoffer.com","areaServed":{{"@type":"City","name":"{name}","addressRegion":"CA"}},"description":"We buy houses fast in {name}, CA for cash. No repairs, no fees, no commissions. Cash offer in 24 hours.","priceRange":"Cash offers"}}
 </script>
 <script type="application/ld+json">
-{{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{{"@type":"Question","name":"How fast can you buy my {name} house?","acceptedAnswer":{{"@type":"Answer","text":"We can close in as few as 7 days in {name}. Call 949-280-5139 and we can have a cash offer to you within 24 hours."}}}},{{"@type":"Question","name":"Do I need to make repairs before selling?","acceptedAnswer":{{"@type":"Answer","text":"Never. We buy {name} houses in any condition."}}}},{{"@type":"Question","name":"Are there any fees or commissions?","acceptedAnswer":{{"@type":"Answer","text":"Zero fees, zero commissions, zero closing costs. What we offer is exactly what you receive at closing."}}}},{{"@type":"Question","name":"Do you buy houses with tenants in {name}?","acceptedAnswer":{{"@type":"Answer","text":"Yes. We buy {county} properties with tenants in place and handle California tenant protection requirements after closing."}}}}]}}
+{{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{{"@type":"Question","name":"How fast can you buy my {name} house?","acceptedAnswer":{{"@type":"Answer","text":"We can close in as few as 7 days in {name}. Call 949-895-1234 and we can have a cash offer to you within 24 hours."}}}},{{"@type":"Question","name":"Do I need to make repairs before selling?","acceptedAnswer":{{"@type":"Answer","text":"Never. We buy {name} houses in any condition."}}}},{{"@type":"Question","name":"Are there any fees or commissions?","acceptedAnswer":{{"@type":"Answer","text":"Zero fees, zero commissions, zero closing costs. What we offer is exactly what you receive at closing."}}}},{{"@type":"Question","name":"Do you buy houses with tenants in {name}?","acceptedAnswer":{{"@type":"Answer","text":"Yes. We buy {county} properties with tenants in place and handle California tenant protection requirements after closing."}}}}]}}
 </script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QW7L1QHYFR"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','G-QW7L1QHYFR');</script>
@@ -217,7 +217,7 @@ footer a{{color:#f8d264;text-decoration:none}}
 <nav class="site-nav">
   <a href="/" class="nav-logo">Golden Coast Cash Offer</a>
   <div class="nav-links">
-    <a href="/">Home</a><a href="/blog/">Blog</a><a href="tel:9492805139">949-280-5139</a>
+    <a href="/">Home</a><a href="/blog/">Blog</a><a href="tel:9498951234">949-895-1234</a>
     <a href="/#offer" class="nav-cta">Get Cash Offer</a>
   </div>
 </nav>
@@ -257,13 +257,13 @@ footer a{{color:#f8d264;text-decoration:none}}
     </div>
     <h2>How Our {name} Home Buying Process Works</h2>
     <div class="steps">
-      <div class="step"><div class="step-num">1</div><h4>Contact Us</h4><p>Call 949-280-5139 or fill out our form. Tell us about your {name} property — takes 60 seconds.</p></div>
+      <div class="step"><div class="step-num">1</div><h4>Contact Us</h4><p>Call 949-895-1234 or fill out our form. Tell us about your {name} property — takes 60 seconds.</p></div>
       <div class="step"><div class="step-num">2</div><h4>Get Your Offer</h4><p>We research your neighborhood and present a fair, no-obligation cash offer within 24 hours.</p></div>
       <div class="step"><div class="step-num">3</div><h4>Close &amp; Get Paid</h4><p>Choose your closing date — as fast as 7 days. We handle all paperwork through a reputable {county} escrow company.</p></div>
     </div>
     <div class="cta-block">
       <h3>Ready to Sell Your {name} Home Fast?</h3>
-      <p>Call us at 949-280-5139 or fill out our form to get a no-obligation cash offer within 24 hours. No repairs, no fees, no surprises.</p>
+      <p>Call us at 949-895-1234 or fill out our form to get a no-obligation cash offer within 24 hours. No repairs, no fees, no surprises.</p>
       <a href="/#offer">Get My Free Cash Offer</a>
     </div>
     <h2>Why {name} Homeowners Choose a Cash Sale</h2>
@@ -289,8 +289,8 @@ footer a{{color:#f8d264;text-decoration:none}}
     </ul>
     <div class="cta-block">
       <h3>Questions About Selling Your {name} Home?</h3>
-      <p>Call us at 949-280-5139 — happy to answer questions about the process, what your home might be worth, or anything else. No pressure, no obligation.</p>
-      <a href="tel:9492805139">Call 949-280-5139</a>
+      <p>Call us at 949-895-1234 — happy to answer questions about the process, what your home might be worth, or anything else. No pressure, no obligation.</p>
+      <a href="tel:9498951234">Call 949-895-1234</a>
     </div>
     <h2>What We Offer {name} Sellers</h2>
     <ul>
@@ -307,9 +307,9 @@ footer a{{color:#f8d264;text-decoration:none}}
     <div class="s-card">
       <h3>Get Your Free Cash Offer</h3>
       <p>No fees, no repairs. Close in 7 days or on your schedule.</p>
-      <a href="tel:9492805139" class="s-phone">949-280-5139</a>
+      <a href="tel:9498951234" class="s-phone">949-895-1234</a>
       <a href="/#offer" class="s-btn orange">Get Cash Offer</a>
-      <a href="tel:9492805139" class="s-btn navy">Call Us Now</a>
+      <a href="tel:9498951234" class="s-btn navy">Call Us Now</a>
     </div>
     <div class="s-card">
       <h3>ZIP Codes Served</h3>
@@ -329,7 +329,7 @@ footer a{{color:#f8d264;text-decoration:none}}
   </div>
 </div>
 <footer>
-  &copy; {YEAR} Golden Coast Cash Offer &middot; <a href="/">goldencoastcashoffer.com</a> &middot; 949-280-5139<br>
+  &copy; {YEAR} Golden Coast Cash Offer &middot; <a href="/">goldencoastcashoffer.com</a> &middot; 949-895-1234<br>
   Serving {name} and all of {county}, Southern California
 </footer>
 </body>
