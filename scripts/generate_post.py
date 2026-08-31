@@ -167,7 +167,7 @@ def generate_post(topic: dict) -> dict:
 
 COMPANY INFO:
 - Name: Golden Coast Cash Offer
-- Phone: 949-280-5139
+- Phone: 949-895-1234
 - Website: https://www.goldencoastcashoffer.com
 - Service area: Orange County (Irvine, Mission Viejo, Newport Beach, Laguna Hills, Lake Forest, San Clemente, San Juan Capistrano, Aliso Viejo, Huntington Beach, Tustin, Fountain Valley, Costa Mesa, Garden Grove, Fullerton, Anaheim, Santa Ana, Orange, Yorba Linda, Dana Point, Laguna Beach, Brea), San Diego, Los Angeles, Ventura County and all of Southern California
 
@@ -182,7 +182,7 @@ ASSIGNMENT:
 REQUIREMENTS:
 1. Write genuinely helpful content for Southern California homeowners
 2. Use H2 and H3 subheadings naturally
-3. Each CTA mentions 949-280-5139 and links to /#offer
+3. Each CTA mentions 949-895-1234 and links to /#offer
 4. Include California-specific context - tenant laws, high home values, escrow process, property taxes
 5. Meta title under 60 characters
 6. Meta description under 160 characters
@@ -262,7 +262,7 @@ def build_html_page(post: dict, topic: dict) -> str:
   "publisher": {{
     "@type": "Organization",
     "name": "Golden Coast Cash Offer",
-    "telephone": "949-280-5139",
+    "telephone": "949-895-1234",
     "url": "https://www.goldencoastcashoffer.com"
   }}
 }}
@@ -272,7 +272,7 @@ def build_html_page(post: dict, topic: dict) -> str:
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    {{"@type": "Question","name": "How fast can Golden Coast Cash Offer close on my home?","acceptedAnswer": {{"@type": "Answer","text": "We can close in as few as 7 days anywhere in Southern California. Call us at 949-280-5139."}}}},
+    {{"@type": "Question","name": "How fast can Golden Coast Cash Offer close on my home?","acceptedAnswer": {{"@type": "Answer","text": "We can close in as few as 7 days anywhere in Southern California. Call us at 949-895-1234."}}}},
     {{"@type": "Question","name": "Do I need to make repairs before selling?","acceptedAnswer": {{"@type": "Answer","text": "Never. We buy houses in any condition - no repairs, no cleaning, no staging required."}}}},
     {{"@type": "Question","name": "Are there any fees or commissions?","acceptedAnswer": {{"@type": "Answer","text": "Zero fees, zero commissions, zero closing costs. What we offer is exactly what you receive."}}}},
     {{"@type": "Question","name": "Do you buy homes with tenants in California?","acceptedAnswer": {{"@type": "Answer","text": "Yes. We buy California properties with tenants in place. You don't need to navigate California's complex tenant protection laws - we handle that after closing."}}}}
@@ -340,7 +340,7 @@ footer a{{color:#f8d264;text-decoration:none}}
   <div class="nav-links">
     <a href="/">Home</a>
     <a href="/blog/">Blog</a>
-    <a href="tel:9492805139">949-280-5139</a>
+    <a href="tel:9498951234">949-895-1234</a>
     <a href="/#offer" class="nav-cta">Get Cash Offer</a>
   </div>
 </nav>
@@ -369,9 +369,9 @@ footer a{{color:#f8d264;text-decoration:none}}
     <div class="sidebar-card">
       <h3>Get Your Free Cash Offer</h3>
       <p>No fees, no repairs. Close in 7 days or on your schedule.</p>
-      <a href="tel:9492805139" class="sidebar-phone">949-280-5139</a>
+      <a href="tel:9498951234" class="sidebar-phone">949-895-1234</a>
       <a href="/#offer" class="sidebar-btn orange">Get Cash Offer</a>
-      <a href="tel:9492805139" class="sidebar-btn">Call Us Now</a>
+      <a href="tel:9498951234" class="sidebar-btn">Call Us Now</a>
     </div>
     <div class="sidebar-card">
       <h3>How It Works</h3>
@@ -390,7 +390,7 @@ footer a{{color:#f8d264;text-decoration:none}}
 </div>
 
 <footer>
-  {year} Golden Coast Cash Offer · <a href="/">goldencoastcashoffer.com</a> · 949-280-5139<br>
+  {year} Golden Coast Cash Offer · <a href="/">goldencoastcashoffer.com</a> · 949-895-1234<br>
   Serving Orange County, San Diego, Los Angeles, Ventura County and all of Southern California
 </footer>
 
