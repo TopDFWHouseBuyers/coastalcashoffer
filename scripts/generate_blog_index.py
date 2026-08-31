@@ -164,7 +164,7 @@ footer a{{color:#f8d264;text-decoration:none}}
   <div class="nav-links">
     <a href="/">Home</a>
     <a href="/blog/">Blog</a>
-    <a href="tel:9492805139">949-280-5139</a>
+    <a href="tel:9498951234">949-895-1234</a>
     <a href="/#offer" class="nav-cta">Get Cash Offer</a>
   </div>
 </nav>
@@ -186,7 +186,7 @@ footer a{{color:#f8d264;text-decoration:none}}
   </div>
 </div>
 <footer>
-  © {year} Golden Coast Cash Offer · <a href="/">goldencoastcashoffer.com</a> · 949-280-5139<br>
+  © {year} Golden Coast Cash Offer · <a href="/">goldencoastcashoffer.com</a> · 949-895-1234<br>
   Serving Orange County, San Diego, Los Angeles, Ventura County and all of Southern California
 </footer>
 </body>
