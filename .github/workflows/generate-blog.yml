@@ -25,6 +25,8 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python scripts/generate_post.py
+      - name: Rebuild blog index
+        run: python scripts/generate_blog_index.py
       - run: python scripts/generate_sitemap.py
       - run: |
           git config --global user.name "Coastal Cash Offer Bot"
